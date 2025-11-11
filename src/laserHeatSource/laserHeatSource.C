@@ -151,10 +151,12 @@ void laserHeatSource::createInitialRays
     }
     else // One ray for each boundary patch face within the laser radius
     {
+        
         const vectorField& CI = mesh.C();
 
         forAll(CI, celli)
-        {
+        { 
+            
             const scalar x_coord = CI[celli].x();
             // const scalar y_coord = CI[celli].y();
             const scalar z_coord = CI[celli].z();
