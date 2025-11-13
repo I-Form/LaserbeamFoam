@@ -15,6 +15,6 @@ else
 fi
 
 runApplication blockMesh
-runApplication setSolidFraction -nSubCells 1
+runApplication setSolidFraction -subDivisions 1
 runApplication transformPoints -rotate '((0 1 0) (0 0 1))'
 runApplication laserbeamFoam

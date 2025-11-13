@@ -202,7 +202,7 @@ void printProgressBar(label current, label total, int barWidth = 50)
 
 int main(int argc, char *argv[])
 {
-    argList::addOption("nSubCells", "int", "set the integer nSubCells value");
+    argList::addOption("subDivisions", "int", "set the integer subDivisions value");
     argList::addOption("cellSize", "vector", "set the subdivision cell size");
     argList::addBoolOption("compressible", "enable compressible mode");
     argList::addOption("alpha.phase1", "word", "name of phase 1 volScalarField");
@@ -252,8 +252,8 @@ int main(int argc, char *argv[])
         "zeroGradient"
     );
 
-    label nSubCells = args.getOrDefault("nSubCells", 10);
-    Info << "Subdivision nSubCells = " << nSubCells << nl;
+    label subDivisions = args.getOrDefault("subDivisions", 10);
+    Info << "Subdivision subDivisions = " << subDivisions << nl;
 
     vector cellSize = getCellSize(args, mesh, 0);
     Info << "Using cell size for subdivision: " << cellSize << nl;
@@ -369,7 +369,7 @@ int main(int argc, char *argv[])
         if (cellZ >= zmax && cellZ <= layerHeight)
         {
             std::vector<vector> subCellCenters =
-                subdivideCell(mesh, cellI, nSubCells, cellSize);
+                subdivideCell(mesh, cellI, subDivisions, cellSize);
 
             for (Foam::label subCellI = 0; subCellI < Foam::label(subCellCenters.size()); ++subCellI) {
 
