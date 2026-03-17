@@ -1,6 +1,11 @@
 {
     TSolidus = alpha1*Tsolidus1 + (1.0 - alpha1)*Tsolidus2;
     TLiquidus = alpha1*Tliquidus1 + (1.0 - alpha1)*Tliquidus2;
+
+    
+    eleccond = alpha1*eleccond1 + (1.0 - alpha1)*eleccond2;
+    magperm = alpha1*magperm1 + (1.0 - alpha1)*magperm2;
+
     beta = alpha1*beta1 + (1.0 - alpha1)*beta2;
     rhok = (1.0 - max(epsilon1*(beta)*(T - TSolidus), 0.0));
 

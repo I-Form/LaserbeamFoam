@@ -117,6 +117,11 @@ if
         << exit(FatalError);
 }
 
+
+const Switch electromagnetics(transportProperties.lookupOrDefault<Switch>("electromagnetics", false));
+
+
+
 dictionary& transportPropertiesMetal = transportProperties.subDict("metal");
 dictionary& transportPropertiesGas = transportProperties.subDict("gas");
 
@@ -612,28 +617,15 @@ volScalarField e1temp
 e1temp = fvc::average(epsilon1);
 
 
-dimensionedScalar elec_resistivity_metal
-(
-    "elec_resistivity",
-    dimensionSet(1, 3, -3, 0, 0),
-    transportPropertiesMetal//.lookup("elec_resistivity")
-);
+// dimensionedScalar elec_resistivity_metal
+// (
+//     "elec_resistivity",
+//     dimensionSet(1, 3, -3, 0, 0),
+//     transportPropertiesMetal//.lookup("elec_resistivity")
+// );
 
 
-// Electrical resistivity of condensate only
-volScalarField electrical_resistivity
-(
-    IOobject
-    (
-        "electrical_resistivity",
-        runTime.timeName(),
-        mesh,
-        IOobject::NO_READ,
-        IOobject::NO_WRITE
-    ),
-    mesh,
-    elec_resistivity_metal
-);
+
 
 volScalarField rhoCp
 (
@@ -777,6 +769,260 @@ autoPtr<transportModelType> turbulence
 #include "readGravitationalAcceleration.H"
 #include "readhRef.H"
 #include "gh.H"
+
+
+
+
+
+//electromagnetic fields
+
+
+
+
+const dimensionedScalar eleccond1
+(
+    "Elec_conductivity",
+    dimensionSet(-1, -3, 3, 0, 0),
+    transportPropertiesMetal//.lookup("Tsolidus")
+);
+// Info<<Tsolidus1<<endl;
+const dimensionedScalar eleccond2
+(
+    "Elec_conductivity",
+    dimensionSet(-1, -3, 3, 0, 0),
+    transportPropertiesGas//.lookup("Tsolidus")
+);
+
+
+
+const dimensionedScalar magperm1
+(
+    "Mag_permitivity",
+    dimensionSet(1, 1, -2, 0, 0),
+    transportPropertiesMetal//.lookup("Tsolidus")
+);
+// Info<<Tsolidus1<<endl;
+const dimensionedScalar magperm2
+(
+    "Mag_permitivity",
+    dimensionSet(1, 1, -2, 0, 0),
+    transportPropertiesGas//.lookup("Tsolidus")
+);
+
+
+
+volVectorField H
+(
+    IOobject
+    (
+        "H",
+        runTime.timeName(),
+        mesh,
+        IOobject::MUST_READ,
+        IOobject::AUTO_WRITE
+    ),
+    mesh//,
+);
+
+H.correctBoundaryConditions();
+
+volScalarField pH
+(
+    IOobject
+    (
+        "pH",
+        runTime.timeName(),
+        mesh,
+        IOobject::MUST_READ,
+        IOobject::AUTO_WRITE
+    ),
+    mesh
+);
+
+pH.correctBoundaryConditions();
+
+    volVectorField B
+    (
+        IOobject
+        (
+            "B",
+            runTime.timeName(),
+            mesh,
+            IOobject::READ_IF_PRESENT,
+            IOobject::AUTO_WRITE
+        ),
+        mesh,
+       dimensionedVector("B",dimensionSet(1,0,-2,0,0),vector::zero)
+    );
+
+    B.write();
+
+
+volVectorField J
+(
+    IOobject
+    (
+        "J",
+        runTime.timeName(),
+        mesh,
+        IOobject::READ_IF_PRESENT,
+        IOobject::AUTO_WRITE
+    ),
+        mesh,
+         dimensionedVector("J", dimensionSet(0, -2, 0, 0, 0), vector::zero)
+        // dimensionedScalar("TRHS",dimensionSet(0, 2, -3, 0, 0),scalar(0.0))
+);
+
+    // J=(1.0/magperm)*fvc::curl(B);
+    // J.correctBoundaryConditions();
+
+
+
+
+            volScalarField Joulesource
+    (
+        IOobject
+        (
+            "Joulesource",
+            runTime.timeName(),
+            mesh,
+            IOobject::NO_READ,
+            IOobject::AUTO_WRITE
+        ),
+        mesh,
+        dimensionedScalar("Joulesource",dimensionSet(1, -1, -3, 0, 0),0.0)
+    );
+
+
+volVectorField JcrossB
+(
+    IOobject
+    (
+        "JcrossB",
+        runTime.timeName(),
+        mesh,
+        IOobject::READ_IF_PRESENT,
+        IOobject::AUTO_WRITE
+    ),
+        mesh,
+         dimensionedVector("JcrossB", dimensionSet(1, -2, -2, 0, 0), vector::zero),
+	    zeroGradientFvPatchVectorField::typeName
+        // dimensionedScalar("TRHS",dimensionSet(0, 2, -3, 0, 0),scalar(0.0))
+);
+
+
+
+        volScalarField divB
+    (
+        IOobject
+        (
+            "divB",
+            runTime.timeName(),
+            mesh,
+            IOobject::NO_READ,
+            IOobject::AUTO_WRITE
+        ),
+        mesh,
+        // dimensionedScalar("divB",dimensionSet(0,-2,0,0,0),0.0)
+        dimensionedScalar("divB",dimensionSet(1,-1,-2,0,0),0.0)
+    );
+
+
+
+
+        volScalarField eleccond
+    (
+        IOobject
+        (
+            "eleccond",
+            runTime.timeName(),
+            mesh,
+            IOobject::READ_IF_PRESENT,
+            IOobject::AUTO_WRITE
+        ),
+        mesh,
+        dimensionedScalar("eleccond",dimensionSet(-1, -3, 3, 0, 0),0.0),
+                zeroGradientFvPatchScalarField::typeName
+    );
+
+            volScalarField magperm
+    (
+        IOobject
+        (
+            "magperm",
+            runTime.timeName(),
+            mesh,
+            IOobject::READ_IF_PRESENT,
+            IOobject::AUTO_WRITE
+        ),
+        mesh,
+        dimensionedScalar("magperm",dimensionSet(1, 1, -2, 0, 0),0.0),
+                zeroGradientFvPatchScalarField::typeName
+    );
+
+            volScalarField oneoversigma
+    (
+        IOobject
+        (
+            "oneoversigma",
+            runTime.timeName(),
+            mesh,
+            IOobject::READ_IF_PRESENT,
+            IOobject::AUTO_WRITE
+        ),
+        mesh,
+        dimensionedScalar("oneoversigma",dimensionSet(1, 3, -3, 0, 0),0.0),
+                zeroGradientFvPatchScalarField::typeName
+    );
+
+
+
+        volTensorField gradH
+(
+    IOobject
+    (
+        "gradH",
+        runTime.timeName(),
+        mesh,
+        IOobject::READ_IF_PRESENT,
+        IOobject::AUTO_WRITE
+    ),
+        mesh,
+         dimensionedTensor("gradH",dimensionSet(0, -2, 0, 0, 0),tensor::zero),
+                zeroGradientFvPatchTensorField::typeName
+);
+
+
+
+
+
+#include "createPhiH.H"
+
+
+
+//electromagnetic fields
+
+
+
+
+
+// Electrical resistivity of condensate only
+volScalarField electrical_resistivity
+(
+    IOobject
+    (
+        "electrical_resistivity",
+        runTime.timeName(),
+        mesh,
+        IOobject::NO_READ,
+        IOobject::NO_WRITE
+    ),
+    mesh,
+    1.0/eleccond1
+);
+
+
+
 
 // Create laser heat source
 laserHeatSource laser(mesh);

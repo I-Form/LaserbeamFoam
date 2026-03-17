@@ -74,6 +74,8 @@ int main(int argc, char *argv[])
     #include "initContinuityErrs.H"//new
     #include "createDyMControls.H"//new
 
+    pimpleControl bpiso(mesh, "BPISO"); //Roman, can you check this - I moved from piso to pimplecontrol
+    
     #include "createFields.H"
 
     #include "initCorrectPhi.H"
@@ -170,6 +172,11 @@ int main(int argc, char *argv[])
 
 
             #include "UEqn.H"
+            
+            if(electromagnetics){
+            #include "HEqn.H"//electromag solve
+            }
+
             #include "TEqn.H"
 
             // --- Pressure corrector loop
