@@ -16,6 +16,8 @@ else
 
 Marangoni = condensate*epsilon1*mixture.MarangoniForce(T);
 
+JcrossB=(J ^ (magperm*H));//.oldTime()
+JcrossB.correctBoundaryConditions();
 
 
 
@@ -27,6 +29,7 @@ Marangoni = condensate*epsilon1*mixture.MarangoniForce(T);
       + turbulence->divDevRhoReff(U)
       + fvm::Sp(DC, U)
       + Marangoni
+      -JcrossB
     );
 
     UEqn.relax();
