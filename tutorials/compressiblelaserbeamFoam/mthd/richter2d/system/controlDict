@@ -14,6 +14,14 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+// Load blastAMR libs
+libs
+(
+    libamrDynamicFvMesh.so
+    libamrIndicators.so
+    libamrCPULoad.so
+);
+
 application     compressibleMultiphaseInterFoam;
 
 startFrom       latestTime;
