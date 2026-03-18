@@ -1,0 +1,26 @@
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "initial";
+    object      initial_values;
+}
+
+// Initial internal values list to enable referencing by setFields
+#include "pyfoam_initial_values"
+
+
+#include "../constant/properties_reference"
+// careful for name differences in `debug` tutorials
+
+// B_target -99e-3; // 99 mT (-minus to match direction in richter)
+
+H_argon_target #calc "$B_target / $magnetic_permeability_argon_"; // 796178.3439490446;
+H_ga_target  #calc "$B_target / $magnetic_permeability_ga_"; // 79617.83439490446;
+
+H_argon (0 0 $H_argon_target); //(0 0 4000); // (0 0 402070.06369426753);
+H_ga (0 0 $H_ga_target); //(0 0  400); // (0 0 40207.00637);
+
+// hot fix
+H_air $H_argon;
+H_fe  $H_ga;

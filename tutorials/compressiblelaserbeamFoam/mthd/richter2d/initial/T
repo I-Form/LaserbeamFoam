@@ -1,0 +1,77 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  10
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       volScalarField;
+    location    "0";
+    object      T;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+#include "pyfoam_initial_values"
+dimensions      [0 0 0 1 0 0 0];
+
+internalField   uniform $T_internal; // 293;
+
+boundaryField
+{
+    leftWall
+    {
+        type            fixedValue;
+        value           $internalField;
+        // type zeroGradient;
+        
+        // type            inletOutlet;
+        // phi             rhoPhi;
+        // inletValue      $internalField;
+    }
+    rightWall
+    {
+        type            fixedValue;
+        value           $internalField;
+        // type zeroGradient;
+        // type outletInlet;
+        // phi rhoPhi;
+        // outletValue $internalField;
+        // value 
+    }
+
+    inlet
+    {
+        // type            inletOutlet;
+        // phi             rhoPhi;
+        // inletValue      $internalField;
+        $leftWall ;
+    }
+    outlet
+    {
+        $rightWall ;
+    }
+
+    lowerWall
+    {
+        type            fixedValue;
+        value           $internalField; //uniform 293;
+    }
+    atmosphere
+    {
+        type            inletOutlet;
+        phi             rhoPhi;
+        inletValue      $internalField;
+
+        // type            fixedValue;
+        // value           $internalField;
+    }
+    defaultFaces
+    {
+        type            empty;
+    }
+}
+
+
+// ************************************************************************* //
