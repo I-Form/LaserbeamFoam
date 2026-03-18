@@ -22,72 +22,28 @@ boundaryField
 {
     leftWall
     {
-        type            alphaContactAngle;
-        thetaProperties
-        (
-            ( fictum air ) 90 0 0 0
-        );
-        value           uniform 0;
-
-
-        // type zeroGradient;
-        
-        // type            inletOutlet; // <------ USE THIS but coded
-        // inletValue      uniform 1;
-        // value           uniform 0;
+        type            zeroGradient;
     }
     rightWall
     {
-        type            alphaContactAngle;
-        thetaProperties
-        (
-            ( fictum air ) 90 0 0 0
-        );
-        value           uniform 0;
-        // type            alphaContactAngle;
-        // thetaProperties
-        // {
-        //     // oil             { theta0 90; }
-        //     // water           { theta0 90; }
-        //     // mercury         { theta0 90; }
-        //     Fe              { theta0 90; }
-        //     fictum          { theta0 90; }
-        //     fictumvapour          { theta0 90; }
-        // }
-        // value           uniform 0;
-        // type zeroGradient;
-
-        // type            inletOutlet; // <------ USE THIS but coded
-        // inletValue      uniform 0;
-        // value           uniform 0;
+        type            zeroGradient;
     }
 
     inlet
     {
-        // type inletOutlet;
-        // inletValue uniform 1;
-        // value uniform 1;
-        $leftWall ;
+        type            zeroGradient;
     }
 
     outlet
     {
-        // type inletOutlet;
-        // inletValue uniform 1;
-        // value uniform 1;
-
-        $rightWall ;
+        type            zeroGradient;
     }
 
     lowerWall
     {
-        type            alphaContactAngle;
-        thetaProperties
-        (
-            ( fictum air ) 90 0 0 0
-        );
-        value           uniform 0;
+        type            zeroGradient;
     }
+
     atmosphere
     {
         type            inletOutlet; // <------ USE THIS but coded
@@ -105,6 +61,7 @@ boundaryField
         // }
         // value           uniform 0;
     }
+
     defaultFaces
     {
         type            empty;

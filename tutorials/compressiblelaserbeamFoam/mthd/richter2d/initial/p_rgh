@@ -126,9 +126,12 @@ boundaryField
 
     atmosphere
     {
-        type            prghTotalPressure;
+        // type            prghTotalPressure;
+        // p0              uniform 1e5;
+        // rho             thermo:rho.fictum;
+        type            totalPressure;
         p0              uniform 1e5;
-        rho             thermo:rho.fictum;
+
 
         // type            fixedFluxPressure;
         // value           $internalField;

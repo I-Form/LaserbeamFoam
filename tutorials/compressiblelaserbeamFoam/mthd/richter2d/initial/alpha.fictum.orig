@@ -22,26 +22,48 @@ boundaryField
 {
     leftWall
     {
-        type            zeroGradient;
+        type            alphaContactAngle;
+        thetaProperties
+        (
+            ( fictum air ) 90 0 0 0
+        );
+        value           uniform 0;
+
+
+        // type zeroGradient;
+        
+        // type            inletOutlet; // <------ USE THIS but coded
+        // inletValue      uniform 1;
+        // value           uniform 0;
     }
     rightWall
     {
-        type            zeroGradient;
+        type            alphaContactAngle;
+        thetaProperties
+        (
+            ( fictum air ) 90 0 0 0
+        );
+        value           uniform 0;
     }
 
     inlet
     {
-        type            zeroGradient;
+        $leftWall ;
     }
 
     outlet
     {
-        type            zeroGradient;
+        $rightWall ;
     }
 
     lowerWall
     {
-        type            zeroGradient;
+        type            alphaContactAngle;
+        thetaProperties
+        (
+            ( fictum air ) 90 0 0 0
+        );
+        value           uniform 0;
     }
 
     atmosphere
@@ -53,7 +75,7 @@ boundaryField
         inletValue      uniform 1;
         value           uniform 1;
     }
-    
+
     defaultFaces
     {
         type            empty;
