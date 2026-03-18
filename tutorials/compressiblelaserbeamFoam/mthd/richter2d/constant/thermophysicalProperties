@@ -15,30 +15,33 @@ FoamFile
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 #include "../initial/pyfoam_initial_values"
 
-phases (air fictum); //GaInSn wall);
+phases (air fictum);
 
 // For Compressible code * * * * * * * * * * * * * * * * * * * * * * * * * * 
 
 pMin            -10000.0;
 P0              $p_internal;
 
+interface_thickness 1e-4;
+electromagnetics false;
+
 argon air;
 
 boils
 (
-    ($argon GaInSn)     1e-9
+    (air fictum)        1e-9
     (air Fe)            1e-9
     (air Fevapour)      1e-9
     (air wall)          1e-9
-    (GaInSn wall)       1e-9
+    (fictum wall)       1e-9
     (Fe Fevapour)       3143  // Force non-boiling
 );
 
 LatentHeatGas // Caution - do not use zero for pairs (div zero error)
 (
-    ($argon GaInSn)     1e-9
+    (air fictum)        1e-9
     (air wall)          1e-9
-    (GaInSn wall)       1e-9
+    (fictum wall)       1e-9
 
     (air Fe)            0
     (air Fevapour)      0
@@ -50,9 +53,9 @@ LatentHeatGas // Caution - do not use zero for pairs (div zero error)
 
 sigmas
 (
-    ($argon GaInSn)    585e-3
-    ($argon wall) 0.0
-    (wall GaInSn) 0.0
+    (air fictum)    585e-3
+    (air wall) 0.0
+    (wall fictum) 0.0
 
 
     (Fevapour Fe)     1.862
@@ -148,9 +151,9 @@ sigmas
 
 dsigmadT
 (
-    ($argon GaInSn)     0.0
-    ($argon wall)       0.0
-    (wall GaInSn)       0.0
+    (air fictum)     0.0
+    (air wall)       0.0
+    (wall fictum)       0.0
 
     (Fevapour Fe)     -1e-4
     (Fe Ni)     0.0
@@ -245,7 +248,7 @@ dsigmadT
 
 interfaceCompression
 (
-    ($argon GaInSn)    1.0
+    (air fictum)    1.0
 
     (Fevapour Fe)     1.0 //0.5 //1.0
     (Fe Ni)     0.0 //-0.1
@@ -340,7 +343,7 @@ interfaceCompression
 
 interfaceDiffusion
 (
-    ($argon GaInSn)    0.0
+    (air fictum)    0.0
 
     (Fevapour Fe)     0.0
     (Fe Ni)     1.0e-9
