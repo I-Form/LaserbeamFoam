@@ -79,13 +79,13 @@ expireSampledSurfacesOnLB   yes;
 
 loadPolicy                  cellCount;
 
-refineInterval              1; // 50;
+refineInterval              10; // 50;
 
-unrefineInterval            1; // 250;
+unrefineInterval            10; // 250;
 
-balanceInterval             1; // 50;
+balanceInterval             10; // 50;
 
-maxRefinement               2;
+maxRefinement               2; // 2; // 1 will work, need test on 2
 
 nBufferLayers               5;
 
