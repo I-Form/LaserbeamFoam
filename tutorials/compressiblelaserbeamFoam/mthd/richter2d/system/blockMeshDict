@@ -33,7 +33,7 @@ xmax $xmax_value ;
 ymin $ymin_value ;
 ymax $ymax_value ;
 zmin 0;
-zmax 0.1e-3;
+zmax 10.1e-3;
 
 y_inlet_min $L0value;
 y_inlet_max $L1value;
@@ -53,17 +53,17 @@ vertices
     ($xmax  $ymax  $zmax) // 6
     ($xmin  $ymax  $zmax) // 7
 
-    //// Inlet/Outlet stream
-    // front face:
-    ($xmin $y_inlet_min $zmin) // 8
-    ($xmax $y_inlet_min $zmin) // 9
-    ($xmax $y_inlet_max $zmin) // 10
-    ($xmin $y_inlet_max $zmin) // 11
-    // rear face:
-    ($xmin $y_inlet_min $zmax) // 12
-    ($xmax $y_inlet_min $zmax) // 13
-    ($xmax $y_inlet_max $zmax) // 14
-    ($xmin $y_inlet_max $zmax) // 15
+    // //// Inlet/Outlet stream
+    // // front face:
+    // ($xmin $y_inlet_min $zmin) // 8
+    // ($xmax $y_inlet_min $zmin) // 9
+    // ($xmax $y_inlet_max $zmin) // 10
+    // ($xmin $y_inlet_max $zmin) // 11
+    // // rear face:
+    // ($xmin $y_inlet_min $zmax) // 12
+    // ($xmax $y_inlet_min $zmax) // 13
+    // ($xmax $y_inlet_max $zmax) // 14
+    // ($xmin $y_inlet_max $zmax) // 15
 );
 
 dx #calc "(20.0e-3)/40.0"; // orig: 4.0/40.0   "(10.0e-3)/40.0"
@@ -80,29 +80,53 @@ blocks
     // todo: convert back to regular rectangle domain
     //     - change to quasi 3D patch (zeroGradient walls required
     //       to solve Hz)
-    // Lower block (wall region)
-    hex (
-            0 1 9 8
-            4 5 13 12
-        )
-        ($nx $ny_wallzone_lower 1)
-        simpleGrading (1 1 1)
+    hex (0 1 2 3 4 5 6 7) ($nx $ny 1) simpleGrading (1 1 1)
 
-    // Middle block (flow region)
-    hex (
-            8 9 10 11
-            12 13 14 15
-        )
-        ($nx $ny_flowzone 1)
-        simpleGrading (1 1 1)   
+    // // Lower block (wall region)
+    // hex (
+    //         0 1 9 8
+    //         4 5 13 12
+    //     )
+    //     ($nx $ny_wallzone_lower 1)
+    //     simpleGrading (1 1 1)er block (wall region)
+    // hex (
+    //         0 1 9 8
+    //         4 5 13 12
+    //     )
+    //     ($nx $ny_wallzone_lower 1)
+    //     simpleGrading (1 1 1)
 
-    // Upper block (wall region)
-    hex (
-            11 10 2 3
-            15 14 6 7
-        )
-        ($nx $ny_wallzone_upper 1)
-        simpleGrading (1 1 1)
+    // // Middle block (flow region)
+    // hex (
+    //         8 9 10 11
+    //         12 13 14 15
+    //     )
+    //     ($nx $ny_flowzone 1)
+    //     simpleGrading (1 1 1)   
+
+    // // Upper block (wall region)
+    // hex (
+    //         11 10 2 3
+    //         15 14 6 7
+    //     )
+    //     ($nx $ny_wallzone_upper 1)
+    //     simpleGrading (1 1 1)
+
+    // // Middle block (flow region)
+    // hex (
+    //         8 9 10 11
+    //         12 13 14 15
+    //     )
+    //     ($nx $ny_flowzone 1)
+    //     simpleGrading (1 1 1)   
+
+    // // Upper block (wall region)
+    // hex (
+    //         11 10 2 3
+    //         15 14 6 7
+    //     )
+    //     ($nx $ny_wallzone_upper 1)
+    //     simpleGrading (1 1 1)
 );
 
 boundary
@@ -112,7 +136,7 @@ boundary
         type patch;
         faces
         (
-            //(0 4 7 3)
+            (0 4 7 3)
             /*
             ($xmin  $ymin  $zmin) // 0
             ($xmin  $ymin  $zmax) // 4
@@ -121,20 +145,20 @@ boundary
             */
             //(0 4 12 15 7 3 11 8)
 
-            (0 4 12 8)
-            // (8 12 15 11)
-            (11 15 7 3)
+            // (0 4 12 8)
+            // // (8 12 15 11)
+            // (11 15 7 3)
         );
     }
 
-    inlet
-    {
-        type patch;
-        faces
-        (
-            (8 12 15 11)
-        );
-    }
+    // inlet
+    // {
+    //     type patch;
+    //     faces
+    //     (
+    //         (8 12 15 11)
+    //     );
+    // }
 
 
     rightWall
@@ -142,22 +166,22 @@ boundary
         type patch;
         faces
         (
-            //// (2 6 5 1)
+            (2 6 5 1)
             
-            (1 9 13 5)
-            // (9 10 14 13)
-            (10 2 6 14)
+            // (1 9 13 5)
+            // // (9 10 14 13)
+            // (10 2 6 14)
         );
     }
 
-    outlet
-    {
-        type patch;
-        faces
-        (
-            (9 10 14 13)
-        );
-    }
+    // outlet
+    // {
+    //     type patch;
+    //     faces
+    //     (
+    //         (9 10 14 13)
+    //     );
+    // }
 
     lowerWall
     {
@@ -177,33 +201,33 @@ boundary
         );
     }
     
-    front // frontAndBack
+    back
     {
         type empty; // empty;
         faces
         (
-            // (0 3 2 1)
-            // (0 8 11 3 2 10 9 1)
-            (0 8 9 1)
-            (8 11 10 9)
-            (11 3 2 10)
+            (0 3 2 1)
+            // // (0 8 11 3 2 10 9 1)
+            // (0 8 9 1)
+            // (8 11 10 9)
+            // (11 3 2 10)
         );
     }
 
-    back
+    front
     {
         type empty;
         faces
         (
-            // (4 5 6 7)
+            (4 5 6 7)
             // (4 5 
             //     13 14
             //  6 7
             //     15 12)
 
-            (4 5 13 12)
-            (12 13 14 15)
-            (15 14 6 7)
+            // (4 5 13 12)
+            // (12 13 14 15)
+            // (15 14 6 7)
         );
     }
 
