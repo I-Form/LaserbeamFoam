@@ -277,9 +277,21 @@ volScalarField TSolidus
 
 
 
-
+IOdictionary phasedictionary
+(
+    IOobject
+    (
+    "thermophysicalProperties",
+    runTime.constant(),
+    mesh,
+    IOobject::MUST_READ_IF_MODIFIED,
+    IOobject::NO_WRITE
+    )
+);
 
 //MAGNETIC STUFF
+const Switch electromagnetics(phasedictionary.lookupOrDefault<Switch>("electromagnetics", false));
+
 volVectorField H
 (
     IOobject
@@ -312,21 +324,21 @@ pH.correctBoundaryConditions();
 
 
 
-     volVectorField B
-    (
-        IOobject
-        (
-            "B",
-            runTime.timeName(),
-            mesh,
-            IOobject::READ_IF_PRESENT,
-            IOobject::AUTO_WRITE
-        ),
-        mesh,
-       dimensionedVector("B",dimensionSet(1,0,-2,0,0),vector::zero)
-    );
+volVectorField B
+(
+IOobject
+(
+    "B",
+    runTime.timeName(),
+    mesh,
+    IOobject::READ_IF_PRESENT,
+    IOobject::AUTO_WRITE
+),
+mesh,
+dimensionedVector("B",dimensionSet(1,0,-2,0,0),vector::zero)
+);
 
-    B.write();
+B.write();
 
 
 volVectorField J
@@ -339,30 +351,30 @@ volVectorField J
         IOobject::READ_IF_PRESENT,
         IOobject::AUTO_WRITE
     ),
-        mesh,
-         dimensionedVector("J", dimensionSet(0, -2, 0, 0, 0), vector::zero)
-        // dimensionedScalar("TRHS",dimensionSet(0, 2, -3, 0, 0),scalar(0.0))
+    mesh,
+    dimensionedVector("J", dimensionSet(0, -2, 0, 0, 0), vector::zero)
+    // dimensionedScalar("TRHS",dimensionSet(0, 2, -3, 0, 0),scalar(0.0))
 );
 
-    // J=(1.0/magperm)*fvc::curl(B);
-    // J.correctBoundaryConditions();
+// J=(1.0/magperm)*fvc::curl(B);
+// J.correctBoundaryConditions();
 
 
 
 
-            volScalarField Joulesource
+volScalarField Joulesource
+(
+    IOobject
     (
-        IOobject
-        (
-            "Joulesource",
-            runTime.timeName(),
-            mesh,
-            IOobject::NO_READ,
-            IOobject::AUTO_WRITE
-        ),
+        "Joulesource",
+        runTime.timeName(),
         mesh,
-        dimensionedScalar("Joulesource",dimensionSet(1, -1, -3, 0, 0),0.0)
-    );
+        IOobject::NO_READ,
+        IOobject::AUTO_WRITE
+    ),
+    mesh,
+    dimensionedScalar("Joulesource",dimensionSet(1, -1, -3, 0, 0),0.0)
+);
 
 
 volVectorField JcrossB
@@ -383,20 +395,20 @@ volVectorField JcrossB
 
 
 
-        volScalarField divB
+volScalarField divB
+(
+    IOobject
     (
-        IOobject
-        (
-            "divB",
-            runTime.timeName(),
-            mesh,
-            IOobject::NO_READ,
-            IOobject::AUTO_WRITE
-        ),
+        "divB",
+        runTime.timeName(),
         mesh,
-        // dimensionedScalar("divB",dimensionSet(0,-2,0,0,0),0.0)
-        dimensionedScalar("divB",dimensionSet(1,-1,-2,0,0),0.0)
-    );
+        IOobject::NO_READ,
+        IOobject::AUTO_WRITE
+    ),
+    mesh,
+    // dimensionedScalar("divB",dimensionSet(0,-2,0,0,0),0.0)
+    dimensionedScalar("divB",dimensionSet(1,-1,-2,0,0),0.0)
+);
 
 //     volVectorField divoneoversigmaTgradH
 // (
@@ -415,54 +427,76 @@ volVectorField JcrossB
 
 #include "createPhiH.H"
 
-       volScalarField eleccond
+volScalarField eleccond
+(
+    IOobject
     (
-        IOobject
-        (
-            "eleccond",
-            runTime.timeName(),
-            mesh,
-            IOobject::READ_IF_PRESENT,
-            IOobject::AUTO_WRITE
-        ),
+        "eleccond",
+        runTime.timeName(),
         mesh,
-        dimensionedScalar("eleccond",dimensionSet(-1, -3, 3, 0, 0),0.0),
-                zeroGradientFvPatchScalarField::typeName
-    );
+        IOobject::READ_IF_PRESENT,
+        IOobject::AUTO_WRITE
+    ),
+    mesh,
+    dimensionedScalar("eleccond",dimensionSet(-1, -3, 3, 0, 0),0.0),
+            zeroGradientFvPatchScalarField::typeName
+);
 
-            volScalarField magperm
+volScalarField magperm
+(
+    IOobject
     (
-        IOobject
-        (
-            "magperm",
-            runTime.timeName(),
-            mesh,
-            IOobject::READ_IF_PRESENT,
-            IOobject::AUTO_WRITE
-        ),
+        "magperm",
+        runTime.timeName(),
         mesh,
-        dimensionedScalar("magperm",dimensionSet(1, 1, -2, 0, 0),0.0),
-                zeroGradientFvPatchScalarField::typeName
-    );
+        IOobject::READ_IF_PRESENT,
+        IOobject::AUTO_WRITE
+    ),
+    mesh,
+    dimensionedScalar("magperm",dimensionSet(1, 1, -2, 0, 0),0.0),
+            zeroGradientFvPatchScalarField::typeName
+);
 
-            volScalarField oneoversigma
+volScalarField oneoversigma
+(
+    IOobject
     (
-        IOobject
-        (
-            "oneoversigma",
-            runTime.timeName(),
-            mesh,
-            IOobject::READ_IF_PRESENT,
-            IOobject::AUTO_WRITE
-        ),
+        "oneoversigma",
+        runTime.timeName(),
         mesh,
-        dimensionedScalar("oneoversigma",dimensionSet(1, 3, -3, 0, 0),0.0),
-                zeroGradientFvPatchScalarField::typeName
-    );
+        IOobject::READ_IF_PRESENT,
+        IOobject::AUTO_WRITE
+    ),
+    mesh,
+    dimensionedScalar("oneoversigma",dimensionSet(1, 3, -3, 0, 0),0.0),
+    zeroGradientFvPatchScalarField::typeName
+);
 
 
+// autoPtr<volTensorField> gradHPtr;
+// volTensorField& gradH = gradHPtr();
+// if (electromagnetic)
+// {
+//     gradHPtr.reset
+//     (
+//         new volTensorField
+//         (
+//             IOobject
+//             (
+//                 "gradH",
+//                 runTime.timeName(),
+//                 mesh,
+//                 IOobject::READ_IF_PRESENT,
+//                 IOobject::AUTO_WRITE
+//             ),
+//             mesh,
+//             dimensionedTensor("gradH",dimensionSet(0, -2, 0, 0, 0),tensor::zero),
+//             zeroGradientFvPatchTensorField::typeName       
+//         )
+//     );
+// }
 
-        volTensorField gradH
+volTensorField gradH
 (
     IOobject
     (
@@ -472,27 +506,43 @@ volVectorField JcrossB
         IOobject::READ_IF_PRESENT,
         IOobject::AUTO_WRITE
     ),
-        mesh,
-         dimensionedTensor("gradH",dimensionSet(0, -2, 0, 0, 0),tensor::zero),
-                zeroGradientFvPatchTensorField::typeName
+    mesh,
+    dimensionedTensor("gradH",dimensionSet(0, -2, 0, 0, 0),tensor::zero),
+    zeroGradientFvPatchTensorField::typeName
 );
+// }
+/*
+    Unfortunately this needs to be changed to autoPtr<type> ptrName; in fwd-decl.
+    then you do the assignments
 
-// //MAGNETIC STUFF
+    autoPtr<volScalarField> additionalFieldPtr;
 
-    IOdictionary phasedictionary
+    if (switch)
+{
+    additionalFieldPtr.reset
     (
-        IOobject
+        new volScalarField
         (
-        "thermophysicalProperties",
-        runTime.constant(),
-        mesh,
-        IOobject::MUST_READ_IF_MODIFIED,
-        IOobject::NO_WRITE
+            IOobject
+            (
+                "additionalField",
+                runTime.timeName(),
+                mesh,
+                IOobject::NO_READ,
+                IOobject::AUTO_WRITE
+            ),
+            mesh,
+            dimensionedScalar("zero", dimless, 0.0)
         )
     );
-
-
-const Switch electromagnetics(phasedictionary.lookupOrDefault<Switch>("electromagnetics", false));
+}
+    //then
+    if (additionalFieldPtr.valid() && switch)
+    {
+        UEqn += additionalFieldPtr();
+    }
+*/
+// //MAGNETIC STUFF (End)
 
 
 const dimensionedScalar DarcyConstantlarge
