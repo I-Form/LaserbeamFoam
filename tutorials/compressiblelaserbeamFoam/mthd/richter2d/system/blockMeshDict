@@ -27,12 +27,6 @@ ymax $ymax_value ;
 zmin 0;
 zmax 10.1e-3;
 
-y_inlet_min $L0value;
-y_inlet_max $L1value;
-
-y_outlet_min $y_inlet_min;
-y_outlet_max $y_inlet_max;
-
 nx #calc "abs(($xmax - $xmin) / $dx)";
 ny #calc "abs(($ymax - $ymin) / $dx)";
 
