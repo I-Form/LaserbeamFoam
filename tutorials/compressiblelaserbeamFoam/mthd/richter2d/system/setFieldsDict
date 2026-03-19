@@ -14,7 +14,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 #include "flow_region_geom"
-// #include "../initial/pyfoam_initial_values"
+// #include "../initial/initial_values"
 #include "../initial/initial_values"
 
 defaultFieldValues

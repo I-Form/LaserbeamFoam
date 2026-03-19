@@ -13,7 +13,7 @@ FoamFile
     object      phaseProperties;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-#include "../initial/pyfoam_initial_values"
+#include "../initial/initial_values"
 
 phases (air fictum);
 
