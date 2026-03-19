@@ -14,7 +14,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 // #include "../system/flow_region_geom"
-#include "pyfoam_initial_values"
+#include "initial_values"
 
 dimensions      [0 1 -1 0 0 0 0];
 
@@ -63,19 +63,6 @@ boundaryField
         //     }
         // #};
 
-    }
-
-    inlet
-    {
-        // type            fixedValue;
-        // value           uniform ( $U_inlet_value 0 0);
-        type noSlip;
-    }
-    outlet
-    {
-        // type pressureInletOutletVelocity;
-        // value uniform (0 0 0);
-        type noSlip;
     }
 
     rightWall

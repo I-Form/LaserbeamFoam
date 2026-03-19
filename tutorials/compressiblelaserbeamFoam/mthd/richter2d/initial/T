@@ -13,7 +13,7 @@ FoamFile
     object      T;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-#include "pyfoam_initial_values"
+#include "initial_values"
 dimensions      [0 0 0 1 0 0 0];
 
 internalField   uniform $T_internal; // 293;
@@ -39,18 +39,6 @@ boundaryField
         // phi rhoPhi;
         // outletValue $internalField;
         // value 
-    }
-
-    inlet
-    {
-        // type            inletOutlet;
-        // phi             rhoPhi;
-        // inletValue      $internalField;
-        $leftWall ;
-    }
-    outlet
-    {
-        $rightWall ;
     }
 
     lowerWall
