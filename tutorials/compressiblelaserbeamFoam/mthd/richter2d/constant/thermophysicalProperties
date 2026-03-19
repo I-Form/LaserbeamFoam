@@ -19,11 +19,11 @@ phases (air fictum);
 
 // For Compressible code * * * * * * * * * * * * * * * * * * * * * * * * * * 
 
-pMin            -10000.0;
-P0              $p_internal;
+pMin                    -10000.0;
+P0                      $p_internal;
 
-interface_thickness 1e-4;
-electromagnetics false;
+interface_thickness     1e-4;
+electromagnetics        true;
 
 boils
 (
