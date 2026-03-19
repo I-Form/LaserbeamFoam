@@ -56,16 +56,6 @@ boundaryField
     {
         $lowerWall;
     }
-    
-    inlet
-    {
-        $rightWall
-    }
-
-    outlet
-    {
-        $rightWall
-    }
 }
 
 // ************************************************************************* //

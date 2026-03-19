@@ -29,16 +29,6 @@ boundaryField
         type            zeroGradient;
     }
 
-    inlet
-    {
-        type            zeroGradient;
-    }
-
-    outlet
-    {
-        type            zeroGradient;
-    }
-
     lowerWall
     {
         type            zeroGradient;

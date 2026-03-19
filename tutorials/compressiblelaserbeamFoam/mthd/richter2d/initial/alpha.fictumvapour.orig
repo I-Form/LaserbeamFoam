@@ -29,16 +29,6 @@ boundaryField
         type            zeroGradient;
     }
 
-    inlet
-    {
-        type            zeroGradient;
-    }
-
-    outlet
-    {
-        type            zeroGradient;
-    }
-
     lowerWall
     {
         type            zeroGradient;
@@ -47,7 +37,7 @@ boundaryField
     atmosphere
     {
         type            inletOutlet;
-        
+
         inletValue      uniform 0;
         value           uniform 0;
     }

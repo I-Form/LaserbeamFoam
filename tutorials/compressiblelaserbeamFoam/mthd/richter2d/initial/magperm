@@ -21,7 +21,7 @@ internalField   uniform 0.0;
 boundaryField
 {
     #includeEtc "caseDicts/setConstraintTypes"
-    
+
     leftWall
     {
         type            fixedValue;
@@ -29,18 +29,6 @@ boundaryField
     }
 
     rightWall
-    {
-        type            fixedValue;
-        value           uniform $magnetic_permeability_ga_;
-    }
-
-    inlet
-    {
-        type            fixedValue;
-        value           uniform $magnetic_permeability_ga_;
-    }
-
-    outlet
     {
         type            fixedValue;
         value           uniform $magnetic_permeability_ga_;

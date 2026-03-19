@@ -46,16 +46,6 @@ boundaryField
         value           uniform 0;
     }
 
-    inlet
-    {
-        $leftWall ;
-    }
-
-    outlet
-    {
-        $rightWall ;
-    }
-
     lowerWall
     {
         type            alphaContactAngle;

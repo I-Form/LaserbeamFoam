@@ -24,36 +24,28 @@ boundaryField
     lowerWall
     {
         // type            fixedValue;
-        // value           uniform $H_air ; // (0 0 40207.00637);
-        // type            zeroGradient;
-        type            fixedValue;
-        value           uniform $H_fe ;
+        // value           uniform $H_air;
+        type            zeroGradient;
+        // type            fixedValue;
+        // value           uniform $H_fe ;
     }
     atmosphere
     {
-        type            fixedValue;
-        value           uniform $H_fe ; //; (0 0 40207.00637); //402070.0637);
+        type            zeroGradient;
+        // type            fixedValue;
+        // value           uniform $H_fe;
     }
     rightWall
     {
-        type            zeroGradient; // empty;
-        // type            fixedValue;
-        // value           uniform $H_fe;
+        // type            zeroGradient; // empty;
+        type            fixedValue;
+        value           uniform $H_fe;
     }
     leftWall
     {
-        type            zeroGradient; // empty;
-        // type            fixedValue;
-        // value           uniform $H_fe;
-    }
-
-    inlet
-    {
-        $rightWall
-    }
-    outlet
-    {
-        $rightWall
+        // type            zeroGradient; // empty;
+        type            fixedValue;
+        value           uniform $H_fe;
     }
 
     // frontAndBack

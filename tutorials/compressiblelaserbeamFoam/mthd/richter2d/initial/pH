@@ -34,8 +34,7 @@ boundaryField
     {
 	    type            zeroGradient;
     }
-    inlet{$lowerWall ;}
-    outlet{$lowerWall ; }
+    
     // defaultFaces
     // {
     //     type            zeroGradient; // empty;

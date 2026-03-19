@@ -86,22 +86,6 @@ boundaryField
     
     }
 
-    inlet
-    {
-        // type zeroGradient;
-        type            fixedFluxPressure;
-        value           $internalField;
-    }
-    outlet
-    {
-        // type            prghTotalPressure; // prghPressure;
-        // p0              $internalField;
-        // phi             rhoPhi;
-        // value           $internalField;
-        type            fixedFluxPressure;
-        value           $internalField;
-    }
-
     rightWall
     {
         type            fixedFluxPressure;
