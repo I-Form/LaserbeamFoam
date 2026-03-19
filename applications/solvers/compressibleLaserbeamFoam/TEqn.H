@@ -42,24 +42,70 @@ TRHS.correctBoundaryConditions();
 
 
 
-    fvScalarMatrix TEqn
-    (
-        fvm::ddt(rho, T)
-      + fvm::div(mixture.rhoPhi(), T)
-      - fvm::laplacian(mixture.alphaEff(turbulence->mut()), T)
-      // - (mixture.rCv()())*fvm::laplacian(mixture.Cv()()*mixture.alphaEff(rho*turbulence->mut()), T)
-      + (
-            fvc::div(fvc::absolute(phi, U), p)
-          + fvc::ddt(rho, K) + fvc::div(mixture.rhoPhi(), K)
-        )*mixture.rCv()
+    // RB: Playing it safe: duplicate code, as I might mess the sign up
+    // and then we'll have a nice time tracking the error. (I am not fresh enough
+    // to check the sign at the moment)
+  
+    // Create local autopointer to reference UEqn outside
+    // of the if statement.
+    autoPtr<fvScalarMatrix> TEqnPtr;
 
-        ==
-        // // fvModels.source(rho, T)
-          mixture.rCv()*laser.deposition()
-          +mixture.rCv()*Joulesource
-        - mixture.rCv()*TRHS
-        -mass_dot
-    );
+    if (electromagnetics)
+    {
+        // Perform declarations
+        volScalarField& Joulesource = JoulesourcePtr();
+
+        TEqnPtr.reset
+        (
+            new fvScalarMatrix
+            (
+                fvm::ddt(rho, T)
+              + fvm::div(mixture.rhoPhi(), T)
+              - fvm::laplacian(mixture.alphaEff(turbulence->mut()), T)
+              // - (mixture.rCv()())*fvm::laplacian(mixture.Cv()()*mixture.alphaEff(rho*turbulence->mut()), T)
+              + (
+                    fvc::div(fvc::absolute(phi, U), p)
+                  + fvc::ddt(rho, K) + fvc::div(mixture.rhoPhi(), K)
+                )*mixture.rCv()
+
+                ==
+                // // fvModels.source(rho, T)
+                  mixture.rCv()*laser.deposition()
+                  +mixture.rCv()*Joulesource
+                - mixture.rCv()*TRHS
+                -mass_dot
+            )
+        );
+        
+        // Actual intent:
+        // TEqn += +mixture.rCv()*Joulesource;
+    }
+    else
+    {
+        TEqnPtr.reset
+        (
+            new fvScalarMatrix
+            (
+                fvm::ddt(rho, T)
+              + fvm::div(mixture.rhoPhi(), T)
+              - fvm::laplacian(mixture.alphaEff(turbulence->mut()), T)
+              // - (mixture.rCv()())*fvm::laplacian(mixture.Cv()()*mixture.alphaEff(rho*turbulence->mut()), T)
+              + (
+                    fvc::div(fvc::absolute(phi, U), p)
+                  + fvc::ddt(rho, K) + fvc::div(mixture.rhoPhi(), K)
+                )*mixture.rCv()
+
+                ==
+                // // fvModels.source(rho, T)
+                  mixture.rCv()*laser.deposition()
+                  // +mixture.rCv()*Joulesource
+                - mixture.rCv()*TRHS
+                -mass_dot
+            )
+        );
+    }
+
+    fvScalarMatrix& TEqn = TEqnPtr();
 
     TEqn.relax();
     TEqn.solve();

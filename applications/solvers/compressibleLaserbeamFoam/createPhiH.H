@@ -1,49 +1,60 @@
-IOobject phiHHeader
-(
-    "phiH",
-    runTime.timeName(),
-    mesh,
-    IOobject::NO_READ
-);
 
+// RB: Move if (switch) inside this code, leaving a reference to the point 
+// in the main scope. Note, we must reference the pointer at point-of-use
+// when used after outside this `if` statement.
 
 surfaceScalarField* phiHPtr = nullptr;
 
-if (phiHHeader.typeHeaderOk<surfaceScalarField>(true))
+if (electromagnetics)
 {
-    Info<< "Reading face flux ";
+    // Reference H field
+    volVectorField& H = HPtr();
 
-    phiHPtr = new surfaceScalarField
+
+    IOobject phiHHeader
     (
-        IOobject
-        (
-            "phiH",
-            runTime.timeName(),
-            mesh,
-            IOobject::MUST_READ,
-            IOobject::AUTO_WRITE
-        ),
-        mesh
+        "phiH",
+        runTime.timeName(),
+        mesh,
+        IOobject::NO_READ
     );
-}
-else
-{
-    Info<< "Calculating face flux ";
 
-    phiHPtr = new surfaceScalarField
-    (
-        IOobject
+    if (phiHHeader.typeHeaderOk<surfaceScalarField>(true))
+    {
+        Info<< "Reading face flux ";
+
+        phiHPtr = new surfaceScalarField
         (
-            "phiH",
-            runTime.timeName(),
-            mesh,
-            IOobject::NO_READ,
-            IOobject::AUTO_WRITE
-        ),
-        fvc::flux(H)
-    );
+            IOobject
+            (
+                "phiH",
+                runTime.timeName(),
+                mesh,
+                IOobject::MUST_READ,
+                IOobject::AUTO_WRITE
+            ),
+            mesh
+        );
+    }
+    else
+    {
+        Info<< "Calculating face flux ";
+
+        phiHPtr = new surfaceScalarField
+        (
+            IOobject
+            (
+                "phiH",
+                runTime.timeName(),
+                mesh,
+                IOobject::NO_READ,
+                IOobject::AUTO_WRITE
+            ),
+            fvc::flux(H)
+        );
+    }
+
+    surfaceScalarField& phiH = *phiHPtr;
+
+    Info<< phiH.name() << nl << endl;
 }
-
-surfaceScalarField& phiH = *phiHPtr;
-
-Info<< phiH.name() << nl << endl;
