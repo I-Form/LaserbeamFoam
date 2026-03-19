@@ -28,11 +28,8 @@ electromagnetics        true;
 boils
 (
     (air fictum)        1e-9
-    (air Fe)            1e-9
-    (air Fevapour)      1e-9
     (air wall)          1e-9
     (fictum wall)       1e-9
-    (Fe Fevapour)       3143  // Force non-boiling
 );
 
 LatentHeatGas // Caution - do not use zero for pairs (div zero error)
@@ -40,10 +37,6 @@ LatentHeatGas // Caution - do not use zero for pairs (div zero error)
     (air fictum)        1e-9
     (air wall)          1e-9
     (fictum wall)       1e-9
-
-    (air Fe)            0
-    (air Fevapour)      0
-    (Fe Fevapour)       349.6  // Caution - do not use zero for pairs
 );
 
 
@@ -51,387 +44,26 @@ LatentHeatGas // Caution - do not use zero for pairs (div zero error)
 
 sigmas
 (
-    (air fictum)    585e-3
-    (air wall) 0.0
-    (wall fictum) 0.0
-
-
-    (Fevapour Fe)     1.862
-    (Fe Ni)     0.0
-    (Nivapour Fe)     1.862
-    (Fe Ti)     0.0
-    (Tivapour Fe)     1.862
-    (Fe Al)     0.0
-    (Alvapour Fe)     1.862
-    (Fe Mn)     0.0
-    (Mnvapour Fe)     1.862
-    (Fe V)     0.0
-    (Vvapour Fe)     1.862
-    (air Fe)     1.862
-
-    (Fevapour Ni)     1.796
-    (Fevapour Nivapour)     0.0
-    (Fevapour Ti)     1.642
-    (Fevapour Tivapour)     0.0
-    (Fevapour Al)     2.25
-    (Fevapour Alvapour)     0.0
-    (Fevapour Mn)     2.25
-    (Fevapour Mnvapour)     0.0
-    (Fevapour V)     2.25
-    (Fevapour Vvapour)     0.0
-    (air Fevapour)     0.0
-    
-    (Nivapour Ni)     1.796
-    (Ni Ti)     0.0
-    (Tivapour Ni)     1.796
-    (Ni Al)     0.0
-    (Alvapour Ni)     1.796
-    (Ni Mn)     0.0
-    (Mnvapour Ni)     1.796
-    (Ni V)     0.0
-    (Vvapour Ni)     1.796
-    (air Ni)     1.796
-
-    (Nivapour Ti)     1.642
-    (Nivapour Tivapour)     0.0
-    (Nivapour Al)     2.25
-    (Nivapour Alvapour)     0.0
-    (Nivapour Mn)     2.25
-    (Nivapour Mnvapour)     0.0
-    (Nivapour V)     2.25
-    (Nivapour Vvapour)     0.0
-    (air Nivapour)     0.0
-
-    (Tivapour Ti)     1.642
-    (Ti Al)     0.0
-    (Alvapour Ti)     1.642
-    (Ti Mn)     0.0
-    (Mnvapour Ti)     1.642
-    (Ti V)     0.0
-    (Vvapour Ti)     1.642
-    (air Ti)     1.642
-
-    (Tivapour Al)     2.25
-    (Tivapour Alvapour)     0.0
-    (Tivapour Mn)     2.25
-    (Tivapour Mnvapour)     0.0
-    (Tivapour V)     2.25
-    (Tivapour Vvapour)     0.0
-    (air Tivapour)     0.0
-
-    (Alvapour Al)     2.25
-    (Al Mn) 0.0
-    (Mnvapour Al)     2.25
-    (Al V) 0.0
-    (Vvapour Al) 1.5
-    (air Al)     1.0
-    
-    (Alvapour Mn) 1.5
-    (Alvapour Mnvapour) 0.0
-    (Alvapour V) 1.0
-    (Alvapour Vvapour) 0.0
-    (air Alvapour) 0.0
-
-    (Mnvapour Mn) 1.5
-    (Mn V) 0.0
-    (Vvapour Mn) 1.5
-    (air Mn) 1.5
-
-    (Mnvapour V) 2.0
-    (Mnvapour Vvapour) 0.0
-    (air Mnvapour) 0.0
-
-    (Vvapour V) 1.5
-    (air V) 1.5
-
-    (air Vvapour) 0.0
+    (air fictum)        585e-3
+    (air wall)          0.0
+    (wall fictum)       0.0
 );
 
 dsigmadT
 (
-    (air fictum)     0.0
-    (air wall)       0.0
+    (air fictum)        0.0
+    (air wall)          0.0
     (wall fictum)       0.0
-
-    (Fevapour Fe)     -1e-4
-    (Fe Ni)     0.0
-    (Nivapour Fe)     -1e-4
-    (Fe Ti)     0.0
-    (Tivapour Fe)     -1e-4
-    (Fe Al)     0.0
-    (Alvapour Fe)     -1e-4
-    (Fe Mn)     0.0
-    (Mnvapour Fe)     -1e-4
-    (Fe V)     0.0
-    (Vvapour Fe)     -1e-4
-    (air Fe)     -1e-4
-
-    (Fevapour Ni)     -1e-5
-    (Fevapour Nivapour)     0.0
-    (Fevapour Ti)     -1e-5
-    (Fevapour Tivapour)     0.0
-    (Fevapour Al)     -1e-5
-    (Fevapour Alvapour)     0.0
-    (Fevapour Mn)     -1e-5
-    (Fevapour Mnvapour)     0.0
-    (Fevapour V)     -1e-5
-    (Fevapour Vvapour)     0.0
-    (air Fevapour)     0.0
-    
-    (Nivapour Ni)     -1e-5
-    (Ni Ti)     0.0
-    (Tivapour Ni)     -1e-5
-    (Ni Al)     0.0
-    (Alvapour Ni)     -1e-5
-    (Ni Mn)     0.0
-    (Mnvapour Ni)     -1e-5
-    (Ni V)     0.0
-    (Vvapour Ni)     -1e-5
-    (air Ni)     -1e-4
-
-    (Nivapour Ti)     -1e-5
-    (Nivapour Tivapour)     0.0
-    (Nivapour Al)     -1e-5
-    (Nivapour Alvapour)     0.0
-    (Nivapour Mn)     -1e-5
-    (Nivapour Mnvapour)     0.0
-    (Nivapour V)     -1e-5
-    (Nivapour Vvapour)     0.0
-    (air Nivapour)     0.0
-
-    (Tivapour Ti)     -1e-5
-    (Ti Al)     0.0
-    (Alvapour Ti)     -1e-5
-    (Ti Mn)     0.0
-    (Mnvapour Ti)     -1e-5
-    (Ti V)     0.0
-    (Vvapour Ti)     -1e-5
-    (air Ti)     -5.5e-4
-
-    (Tivapour Al)     -1e-5
-    (Tivapour Alvapour)     0.0
-    (Tivapour Mn)     -1e-5
-    (Tivapour Mnvapour)     0.0
-    (Tivapour V)     -1e-5
-    (Tivapour Vvapour)     0.0
-    (air Tivapour)     0.0
-
-    (Alvapour Al)     -1e-5
-    (Al Mn) 0.0
-    (Mnvapour Al)     -1e-5
-    (Al V) 0.0
-    (Vvapour Al) -1e-5
-    (air Al)     -1e-4
-    
-    (Alvapour Mn) -1e-5
-    (Alvapour Mnvapour) 0.0
-    (Alvapour V) -1e-5
-    (Alvapour Vvapour) 0.0
-    (air Alvapour) 0.0
-
-    (Mnvapour Mn) -1e-5
-    (Mn V) 0.0
-    (Vvapour Mn) -1e-5
-    (air Mn) -1e-4
-
-    (Mnvapour V) -1e-5
-    (Mnvapour Vvapour) 0.0
-    (air Mnvapour) 0.0
-
-    (Vvapour V) -1e-5
-    (air V) -1e-4
-
-    (air Vvapour) 0.0
 );
 
 interfaceCompression
 (
-    (air fictum)    1.0
-
-    (Fevapour Fe)     1.0 //0.5 //1.0
-    (Fe Ni)     0.0 //-0.1
-    (Nivapour Fe)     1.0//0.5 //1.0
-    (Fe Ti)     0.0 //-0.1
-    (Tivapour Fe)     1.0//0.5 //1.0
-    (Fe Al)     0.0 //-0.1
-    (Alvapour Fe)     1.0//0.5 //1.0
-    (Fe Mn)     0.0 //-0.1
-    (Mnvapour Fe)     1.0//0.5 //1.0
-    (Fe V)     0.0 //-0.1
-    (Vvapour Fe)     1.0//0.5 //1.0
-    (air Fe)     1.0
-
-    (Fevapour Ni)     1.0//0.5 //1.0
-    (Fevapour Nivapour)     0.0 //-0.1
-    (Fevapour Ti)     1.0//0.5 //1.0
-    (Fevapour Tivapour)     0.0 //-0.1
-    (Fevapour Al)     1.0//0.5 //1.0
-    (Fevapour Alvapour)     0.0 //-0.1
-    (Fevapour Mn)     1.0//0.5 //1.0
-    (Fevapour Mnvapour)     0.0 //-0.1
-    (Fevapour V)     1.0//0.5 //1.0
-    (Fevapour Vvapour)     0.0 //-0.1
-    (air Fevapour)     0.0
-    
-    (Nivapour Ni)     1.0//0.5 //1.0
-    (Ni Ti)     0.0 //-0.1
-    (Tivapour Ni)     1.0//0.5 //1.0
-    (Ni Al)     0.0 //-0.1
-    (Alvapour Ni)     1.0//0.5 //1.0
-    (Ni Mn)     0.0 //-0.1
-    (Mnvapour Ni)     1.0//0.5 //1.0
-    (Ni V)     0.0 //-0.1
-    (Vvapour Ni)     1.0//0.5 //1.0
-    (air Ni)     1.0
-
-    (Nivapour Ti)     1.0//0.5 //1.0
-    (Nivapour Tivapour)     0.0 //-0.1
-    (Nivapour Al)     1.0//0.5 //1.0
-    (Nivapour Alvapour)     0.0 //-0.1
-    (Nivapour Mn)     1.0//0.5 //1.0
-    (Nivapour Mnvapour)     0.0 //-0.1
-    (Nivapour V)     1.0//0.5 //1.0
-    (Nivapour Vvapour)     0.0 //-0.1
-    (air Nivapour)     0.0
-
-    (Tivapour Ti)     1.0//0.5 //1.0
-    (Ti Al)     0.0 //-0.1
-    (Alvapour Ti)     1.0//0.5 //1.0
-    (Ti Mn)     0.0 //-0.1
-    (Mnvapour Ti)     1.0//0.5 //1.0
-    (Ti V)     0.0 //-0.1
-    (Vvapour Ti)     1.0//0.5 //1.0
-    (air Ti)     1.0
-
-    (Tivapour Al)     1.0//0.5 //1.0
-    (Tivapour Alvapour)     0.0 //-0.1
-    (Tivapour Mn)     1.0//0.5 //1.0
-    (Tivapour Mnvapour)     0.0 //-0.1
-    (Tivapour V)     1.0//0.5 //1.0
-    (Tivapour Vvapour)     0.0 //-0.1
-    (air Tivapour)     0.0
-
-    (Alvapour Al)     1.0//0.5 //1.0
-    (Al Mn) 0.0 //-0.1
-    (Mnvapour Al)     1.0//0.5 //1.0
-    (Al V) 0.0 //-0.1
-    (Vvapour Al) 1.0//0.5 //1.0
-    (air Al)     1.0
-    
-    (Alvapour Mn) 1.0//0.5 //1.0
-    (Alvapour Mnvapour) 0.0 //-0.1
-    (Alvapour V) 1.0//0.5 //1.0
-    (Alvapour Vvapour) 0.0 //-0.1
-    (air Alvapour) 0.0
-
-    (Mnvapour Mn) 1.0//0.5 //1.0
-    (Mn V) 0.0 //-0.1
-    (Vvapour Mn) 1.0//0.5 //1.0
-    (air Mn) 1.0
-
-    (Mnvapour V) 1.0//0.5 //1.0
-    (Mnvapour Vvapour) 0.0 //-0.1
-    (air Mnvapour) 0.0
-
-    (Vvapour V) 1.0//0.5 //1.0
-    (air V) 1.0
-
-    (air Vvapour) 0.0
+    (air fictum)        1.0
 );
 
 interfaceDiffusion
 (
-    (air fictum)    0.0
-
-    (Fevapour Fe)     0.0
-    (Fe Ni)     1.0e-9
-    (Nivapour Fe)     0.0
-    (Fe Ti)     1.0e-9
-    (Tivapour Fe)     0.0
-    (Fe Al)     1.0e-9
-    (Alvapour Fe)     0.0
-    (Fe Mn)     1.0e-9
-    (Mnvapour Fe)     0.0
-    (Fe V)     1.0e-9
-    (Vvapour Fe)     0.0
-    (air Fe)     0.0
-
-    (Fevapour Ni)     0.0
-    (Fevapour Nivapour)     5e-5
-    (Fevapour Ti)     0.0
-    (Fevapour Tivapour)     5e-5
-    (Fevapour Al)     0.0
-    (Fevapour Alvapour)     5e-5
-    (Fevapour Mn)     0.0
-    (Fevapour Mnvapour)     5e-5
-    (Fevapour V)     0.0
-    (Fevapour Vvapour)     5e-5
-    (air Fevapour)     0.0
-    
-    (Nivapour Ni)     0.0
-    (Ni Ti)     1.0e-9
-    (Tivapour Ni)     0.0
-    (Ni Al)     1.0e-9
-    (Alvapour Ni)     0.0
-    (Ni Mn)     1.0e-9
-    (Mnvapour Ni)     0.0
-    (Ni V)     1.0e-9
-    (Vvapour Ni)     0.0
-    (air Ni)     0.0
-
-    (Nivapour Ti)     0.0
-    (Nivapour Tivapour)     5e-5
-    (Nivapour Al)     0.0
-    (Nivapour Alvapour)     5e-5
-    (Nivapour Mn)     0.0
-    (Nivapour Mnvapour)     5e-5
-    (Nivapour V)     0.0
-    (Nivapour Vvapour)     5e-5
-    (air Nivapour)     0.0
-
-    (Tivapour Ti)     0.0
-    (Ti Al)     1.0e-9
-    (Alvapour Ti)     0.0
-    (Ti Mn)     1.0e-9
-    (Mnvapour Ti)     0.0
-    (Ti V)     1.0e-9
-    (Vvapour Ti)     0.0
-    (air Ti)     0.0
-
-    (Tivapour Al)     0.0
-    (Tivapour Alvapour)     5e-5
-    (Tivapour Mn)     0.0
-    (Tivapour Mnvapour)     5e-5
-    (Tivapour V)     0.0
-    (Tivapour Vvapour)     5e-5
-    (air Tivapour)     0.0
-
-    (Alvapour Al)     0.0
-    (Al Mn) 1.0e-9
-    (Mnvapour Al)     0.0
-    (Al V) 1.0e-9
-    (Vvapour Al) 0.0
-    (air Al)     0.0
-    
-    (Alvapour Mn) 0.0
-    (Alvapour Mnvapour) 5e-5
-    (Alvapour V) 0.0
-    (Alvapour Vvapour) 5e-5
-    (air Alvapour) 0.0
-
-    (Mnvapour Mn) 0.0
-    (Mn V) 1.0e-9
-    (Vvapour Mn) 0.0
-    (air Mn) 0.0
-
-    (Mnvapour V) 0.0
-    (Mnvapour Vvapour) 5e-5
-    (air Mnvapour) 0.0
-
-    (Vvapour V) 0.0
-    (air V) 0.0
-
-    (air Vvapour) 0.0
+    (air fictum)        0.0
 );
 
 
