@@ -301,12 +301,11 @@ autoPtr<volVectorField> JPtr;
 autoPtr<volScalarField> JoulesourcePtr;
 autoPtr<volVectorField> JcrossBPtr;
 autoPtr<volScalarField> divBPtr;
-// FD within createPhi.H
-// n/done
+// createPhiH.H now called after `if` statement
 autoPtr<volScalarField> eleccondPtr;
 autoPtr<volScalarField> magpermPtr;
 autoPtr<volScalarField> oneoversigmaPtr;
-autoPtr<volTensorField> gradHPtr; // <- Unused
+autoPtr<volTensorField> gradHPtr;
 
 if (electromagnetics)
 {
