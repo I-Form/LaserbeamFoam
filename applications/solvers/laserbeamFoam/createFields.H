@@ -812,11 +812,13 @@ const dimensionedScalar magperm2
 // Create dependency for `../../../src/MTHD/createFieldsMTHD.H`
 // Note: in compressible* this is required for non-MTHD case also,
 // hence adding this here too. Ideally, should be refactored.
+// > REFACTOR WARNING: `thermophysicalProperties` is changed to
+// `transportProperties`
 IOdictionary phasedictionary
 (
     IOobject
     (
-    "thermophysicalProperties",
+    "transportProperties",
     runTime.constant(),
     mesh,
     IOobject::MUST_READ_IF_MODIFIED,
