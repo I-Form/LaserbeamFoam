@@ -7,12 +7,17 @@
         // Perform declarations
         volScalarField& eleccond = eleccondPtr();
         volScalarField& magperm = magpermPtr();
+
+        const dimensionedScalar& eleccond1 = eleccond1Ptr();
+        const dimensionedScalar& eleccond2 = eleccond2Ptr();
+        const dimensionedScalar& magperm1 = magperm1Ptr();
+        const dimensionedScalar& magperm2 = magperm2Ptr();
         // < declarations end
 
         eleccond = alpha1*eleccond1 + (1.0 - alpha1)*eleccond2;
         magperm = alpha1*magperm1 + (1.0 - alpha1)*magperm2;
     }
-    
+
     beta = alpha1*beta1 + (1.0 - alpha1)*beta2;
     rhok = (1.0 - max(epsilon1*(beta)*(T - TSolidus), 0.0));
 

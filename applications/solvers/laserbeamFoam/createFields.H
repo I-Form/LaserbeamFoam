@@ -774,41 +774,6 @@ autoPtr<transportModelType> turbulence
 
 
 
-//electromagnetic fields
-
-
-
-
-const dimensionedScalar eleccond1
-(
-    "Elec_conductivity",
-    dimensionSet(-1, -3, 3, 0, 0),
-    transportPropertiesMetal//.lookup("Tsolidus")
-);
-// Info<<Tsolidus1<<endl;
-const dimensionedScalar eleccond2
-(
-    "Elec_conductivity",
-    dimensionSet(-1, -3, 3, 0, 0),
-    transportPropertiesGas//.lookup("Tsolidus")
-);
-
-
-
-const dimensionedScalar magperm1
-(
-    "Mag_permitivity",
-    dimensionSet(1, 1, -2, 0, 0),
-    transportPropertiesMetal//.lookup("Tsolidus")
-);
-// Info<<Tsolidus1<<endl;
-const dimensionedScalar magperm2
-(
-    "Mag_permitivity",
-    dimensionSet(1, 1, -2, 0, 0),
-    transportPropertiesGas//.lookup("Tsolidus")
-);
-
 // Create dependency for `../../../src/MTHD/createFieldsMTHD.H`
 // Note: in compressible* this is required for non-MTHD case also,
 // hence adding this here too. Ideally, should be refactored.
@@ -1016,15 +981,197 @@ IOdictionary phasedictionary
 // Now called within `createFieldsMTHD.H`
 // #include "createPhiH.H"
 
-
-
 //electromagnetic fields
+
+
+// Moved the two-phase specific EM props here.
+//> Check how to do autoPtr to const type?
+/*
+autoPtr<const dimensionedScalar> eleccon1Ptr;
+...
+
+if statement
+
+// Then later updateProps etc reference the values.
+*/
+// Must handle elec_resistivity + eleccond 
+autoPtr<const dimensionedScalar> eleccond1Ptr;
+
+// Backwards compatability with `elec_resistivity` key word (start)
+{
+    // Scope guards for key words
+    const word oldKey = "elec_resistivity";
+    const word newKey = "Elec_conductivity";
+    if 
+    (
+        transportPropertiesMetal.found(newKey)
+     && transportPropertiesMetal.found(oldKey)
+    )
+    {
+        Info<< "`createFields.H`:\n\tWarning: using depreciated keyword `" << oldKey << "`. "
+            << "Please use `" << newKey << "` in future.\n"
+            << "\tWarning: detected both conductivity and resistivity inputs\n"
+            << "\t> Prioritising Elec_conductivity. "
+            << "Check your transportProperties.metal for redundancies!"
+            << endl;
+
+        eleccond1Ptr.reset
+        (
+            new const dimensionedScalar
+            (
+                "Elec_conductivity",
+                dimensionSet(-1, -3, 3, 0, 0),
+                transportPropertiesMetal
+            )
+        );
+
+        scalar elecres =
+            transportPropertiesMetal.get<scalar>(oldKey);
+
+        
+        // Optional: check tolerances on inputs
+        // - user may not have realised. Throw if out of tolerance
+        const scalar toleranceForCheck = 1e-10;
+
+        if (mag(eleccond1Ptr().value() - (1.0/elecres)) <= toleranceForCheck)
+        {
+            Info<< "\t> Note: (Electrical cond & Resis. are within a "
+                << toleranceForCheck
+                << " tolerance)."
+                << "\n\t    Elec res^-1 = " << 1.0/elecres
+                << "\n\t    Elec con    = " << eleccond1Ptr().value()
+                << endl;
+        }
+        else
+        {
+            Info<< "\tCAUTION: Your Elec resistivity and conductivity "
+                << "values are dissimilar!"
+                << "\n\tTolerance   = " << toleranceForCheck
+                << "\n\tElec res^-1 = " << 1.0/elecres
+                << "\n\tElec con    = " << eleccond1Ptr().value()
+                << "\n\tStopping solver!"
+                << endl;
+            exit(-1);
+        }
+    }
+
+    if
+    (
+        (!transportPropertiesMetal.found(newKey))
+     &&   transportPropertiesMetal.found(oldKey)
+    )
+    {
+        Info<< "Warning: using depreciated keyword `" << oldKey << "`. "
+            << "Please use `" << newKey << "` in future."
+            << endl;
+
+        // read resistivity as a scalar then invert at `.reset`
+        scalar elec_resistivity = 
+            transportPropertiesMetal.get<scalar>(oldKey);
+
+        // elec_resistivity += SMALL; // add safety for case of 0?
+
+        eleccond1Ptr.reset
+        (
+            new const dimensionedScalar
+            (
+                "Elec_conductivity",
+                dimensionSet(-1, -3, 3, 0, 0),
+                1.0 / elec_resistivity
+            )
+        );
+    }
+    else
+    {
+        // Logic: assume Elec_conductivity is provided.
+        eleccond1Ptr.reset
+        (
+            new const dimensionedScalar
+            (
+                "Elec_conductivity",
+                dimensionSet(-1, -3, 3, 0, 0),
+                transportPropertiesMetal
+            )
+        );
+    }
+}
+// Backwards compatability with `elec_resistivity` key word (end)
+
+
+autoPtr<const dimensionedScalar> eleccond2Ptr;
+autoPtr<const dimensionedScalar> magperm1Ptr;
+autoPtr<const dimensionedScalar> magperm2Ptr;
+
+if (electromagnetics)
+{
+    // eleccond1Ptr.reset
+    // (
+    //     new const dimensionedScalar
+    //     (
+    //         "Elec_conductivity",
+    //         dimensionSet(-1, -3, 3, 0, 0),
+    //         transportPropertiesMetal//.lookup("Tsolidus")
+    //     )
+    // );
+    // // Info<<Tsolidus1<<endl;
+    eleccond2Ptr.reset
+    (
+        new const dimensionedScalar
+        (
+            "Elec_conductivity",
+            dimensionSet(-1, -3, 3, 0, 0),
+            transportPropertiesGas//.lookup("Tsolidus")
+        )
+    );
+
+
+
+    magperm1Ptr.reset
+    (
+        new const dimensionedScalar
+        (
+            "Mag_permitivity",
+            dimensionSet(1, 1, -2, 0, 0),
+            transportPropertiesMetal//.lookup("Tsolidus")
+        )
+    );
+    // // Info<<Tsolidus1<<endl;
+    magperm2Ptr.reset
+    (
+        new const dimensionedScalar
+        (
+            "Mag_permitivity",
+            dimensionSet(1, 1, -2, 0, 0),
+            transportPropertiesGas//.lookup("Tsolidus")
+        )
+    );
+}
+// else
+// {
+//     // Exception specifically for laserbeamFoam
+//     // eleccond1 must be read in - consider refactoring above to
+//     // not make it a pointer?
+//     eleccond1Ptr.reset
+//     (
+//         new const dimensionedScalar
+//         (
+//             "Elec_conductivity",
+//             dimensionSet(-1, -3, 3, 0, 0),
+//             transportPropertiesMetal//.lookup("Tsolidus")
+//         )
+//     );
+// }
+//electromagnetic fields (end)
 
 
 
 
 
 // Electrical resistivity of condensate only
+
+// Reference at point of use
+const dimensionedScalar& eleccond1 = eleccond1Ptr();
+// need backwards compatability for `elec_resistivity` as the keyword
 volScalarField electrical_resistivity
 (
     IOobject
