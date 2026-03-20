@@ -239,10 +239,10 @@ if (electromagnetics)
     volVectorField& H = HPtr();
     volScalarField& pH = pHPtr();
     volVectorField& B = BPtr();
+
     H.correctBoundaryConditions();
-
     pH.correctBoundaryConditions();
-
+    
     B.write();
 }
 
