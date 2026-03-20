@@ -1,3 +1,5 @@
+// WARNING: this header has a dependency on `phasedictionary`.
+
 const Switch electromagnetics(phasedictionary.lookupOrDefault<Switch>("electromagnetics", false));
 
 // EM should be independent from others => Moving to pointer system.
