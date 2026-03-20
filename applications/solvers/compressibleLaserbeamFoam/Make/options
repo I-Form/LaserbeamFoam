@@ -1,5 +1,7 @@
 EXE_INC = \
+    -DFULLDEBUG -g -O0 \
     -I./VoF \
+    -I../../../src/MTHD \
     -I../../../src/laserHeatSource/lnInclude \
     -ImultiphaseMixtureThermo/lnInclude \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
