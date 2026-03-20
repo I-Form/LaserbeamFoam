@@ -70,11 +70,21 @@
           //- (tau && gradU) // Viscous dissipation
          ==
             laser.deposition()
-            +Joulesource
+            // +Joulesource
           - Qv*mag(gradAlpha)*thermalDamper
           + (Qrad_expl - Qv)*gradAlphaDamper
           - TRHS
         );
+        
+        if (electromagnetics)
+        {
+            // Perform declarations
+            volScalarField& Joulesource = JoulesourcePtr();
+
+            TEqn == Joulesource; // NEEDS CHECK
+            // Actual intent:
+            // TEqn += +mixture.rCv()*Joulesource;
+        }
 
         TEqn.relax();
 

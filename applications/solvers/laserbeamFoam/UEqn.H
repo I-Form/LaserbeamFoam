@@ -49,8 +49,8 @@ pVap = 0.54*p0*Foam::exp(LatentHeatVap*Mm*((T - Tvap)/(R*T*Tvap)));
 pVap.correctBoundaryConditions();  // ADDED
 
 
-JcrossB=(J ^ (magperm*H));//.oldTime()
-JcrossB.correctBoundaryConditions();
+// JcrossB=(J ^ (magperm*H));//.oldTime()
+// JcrossB.correctBoundaryConditions();
 
     fvVectorMatrix UEqn
     (
@@ -59,10 +59,25 @@ JcrossB.correctBoundaryConditions();
       + turbulence->divDevRhoReff(rho, U)
       + fvm::Sp(DC, U)
       - Marangoni*damper
-      -JcrossB*damper
+    //   -JcrossB*damper
      ==
         fvOptions(rho, U)
     );
+
+    if (electromagnetics)
+    {
+        // Perform declarations
+        volVectorField& H = HPtr();
+        volVectorField& J = JPtr();
+        volScalarField& magperm = magpermPtr();
+        volVectorField& JcrossB = JcrossBPtr();
+        // < declarations end
+
+        JcrossB=(J ^ (magperm*H));//.oldTime()
+        JcrossB.correctBoundaryConditions();
+
+        UEqn -= JcrossB*damper;
+    }
 
     UEqn.relax();
 
