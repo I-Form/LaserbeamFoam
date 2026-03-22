@@ -81,9 +81,9 @@
             // Perform declarations
             volScalarField& Joulesource = JoulesourcePtr();
 
-            TEqn == Joulesource; // NEEDS CHECK
-            // Actual intent:
-            // TEqn += +mixture.rCv()*Joulesource;
+            TEqn -= Joulesource;
+            // See `fvMatrix.C` `overload-=` and `overload==`. For `dimensionedField` type
+            // here `-=` and `==` match by doing `source() += ...`.
         }
 
         TEqn.relax();
