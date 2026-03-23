@@ -77,7 +77,7 @@ TRHS.correctBoundaryConditions();
             )
         );
         
-        // Actual intent:
+        // Desired intent:
         // TEqn += +mixture.rCv()*Joulesource;
     }
     else

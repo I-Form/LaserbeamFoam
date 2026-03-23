@@ -60,102 +60,63 @@
 
         const volScalarField gradAlphaDamper (mag(gradAlpha)*thermalDamper);
         
-        // // Debug BUILD ONLY:
-        volScalarField& Joulesource = JoulesourcePtr();
-        fvScalarMatrix TEqn
-        (
-            fvm::ddt(rhoCp,T)
-          + fvm::div(rhophicp, T)
-          - fvm::Sp(fvc::ddt(rhoCp) + fvc::div(rhophicp), T)
-          - fvm::laplacian(kappa, T)
-          - fvm::Sp(Qrad_inpl*gradAlphaDamper, T)
-          //- (tau && gradU) // Viscous dissipation
-         ==
-         (
-            laser.deposition()
-            +Joulesource
-          - Qv*mag(gradAlpha)*thermalDamper
-          + (Qrad_expl - Qv)*gradAlphaDamper
-          - TRHS
-         )
-        );
-        // Info<< "Debug build: modified TEqn (+ then -=)" //; will not run with electromagnetics disabled."
-        //     << endl;
+        // Create local autopointer to reference TEqn outside
+        // of the if statement.
+        autoPtr<fvScalarMatrix> TEqnPtr;
+
         if (electromagnetics)
         {
             // Perform declarations
             volScalarField& Joulesource = JoulesourcePtr();
 
-            TEqn 
-                == (
-                // Joulesource
-                  laser.deposition()
-                + Joulesource
+            TEqnPtr.reset
+            (
+                new fvScalarMatrix
+                (
+                    fvm::ddt(rhoCp,T)
+                + fvm::div(rhophicp, T)
+                - fvm::Sp(fvc::ddt(rhoCp) + fvc::div(rhophicp), T)
+                - fvm::laplacian(kappa, T)
+                - fvm::Sp(Qrad_inpl*gradAlphaDamper, T)
+                //- (tau && gradU) // Viscous dissipation
+                ==
+                (
+                    laser.deposition()
+                    +Joulesource
                 - Qv*mag(gradAlpha)*thermalDamper
                 + (Qrad_expl - Qv)*gradAlphaDamper
                 - TRHS
+                )
+                    // )
+                )
             );
-            // See `fvMatrix.C` `overload-=` and `overload==`. For `dimensionedField` type
-            // here `-=` and `==` match by doing `source() += ...`.
+
+            // Desired intent:
+            // TEqn += mixture.rCv()*Joulesource;
+        }
+        else
+        {
+            TEqnPtr.reset
+            (
+                new fvScalarMatrix
+                (
+                    fvm::ddt(rhoCp,T)
+                + fvm::div(rhophicp, T)
+                - fvm::Sp(fvc::ddt(rhoCp) + fvc::div(rhophicp), T)
+                - fvm::laplacian(kappa, T)
+                - fvm::Sp(Qrad_inpl*gradAlphaDamper, T)
+                //- (tau && gradU) // Viscous dissipation
+                ==
+                    laser.deposition()
+                    // +Joulesource
+                - Qv*mag(gradAlpha)*thermalDamper
+                + (Qrad_expl - Qv)*gradAlphaDamper
+                - TRHS
+                )
+            );
         }
 
-        // // Create local autopointer to reference UEqn outside
-        // // of the if statement.
-        // autoPtr<fvScalarMatrix> TEqnPtr;
-
-        // if (electromagnetics)
-        // {
-        //     // Perform declarations
-        //     volScalarField& Joulesource = JoulesourcePtr();
-
-        //     TEqnPtr.reset
-        //     (
-        //         new fvScalarMatrix
-        //         (
-        //             fvm::ddt(rhoCp,T)
-        //         + fvm::div(rhophicp, T)
-        //         - fvm::Sp(fvc::ddt(rhoCp) + fvc::div(rhophicp), T)
-        //         - fvm::laplacian(kappa, T)
-        //         - fvm::Sp(Qrad_inpl*gradAlphaDamper, T)
-        //         //- (tau && gradU) // Viscous dissipation
-        //         ==
-        //         (
-        //             laser.deposition()
-        //             +Joulesource
-        //         - Qv*mag(gradAlpha)*thermalDamper
-        //         + (Qrad_expl - Qv)*gradAlphaDamper
-        //         - TRHS
-        //         )
-        //             // )
-        //         )
-        //     );
-            
-        //     // Actual intent:
-        //     // TEqn += +mixture.rCv()*Joulesource;
-        // }
-        // else
-        // {
-        //     TEqnPtr.reset
-        //     (
-        //         new fvScalarMatrix
-        //         (
-        //             fvm::ddt(rhoCp,T)
-        //         + fvm::div(rhophicp, T)
-        //         - fvm::Sp(fvc::ddt(rhoCp) + fvc::div(rhophicp), T)
-        //         - fvm::laplacian(kappa, T)
-        //         - fvm::Sp(Qrad_inpl*gradAlphaDamper, T)
-        //         //- (tau && gradU) // Viscous dissipation
-        //         ==
-        //             laser.deposition()
-        //             // +Joulesource
-        //         - Qv*mag(gradAlpha)*thermalDamper
-        //         + (Qrad_expl - Qv)*gradAlphaDamper
-        //         - TRHS
-        //         )
-        //     );
-        // }
-
-        // fvScalarMatrix& TEqn = TEqnPtr();
+        fvScalarMatrix& TEqn = TEqnPtr();
 
 
         TEqn.relax();
