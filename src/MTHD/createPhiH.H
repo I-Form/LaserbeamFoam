@@ -23,6 +23,8 @@ if (electromagnetics)
     {
         Info<< "Reading face flux ";
 
+        // Check: Alex Skillen - change `phiHPtr` to `autoPtr` or add formal 
+        // delete at end of main() (latter if needed). 
         phiHPtr = new surfaceScalarField
         (
             IOobject
