@@ -813,7 +813,8 @@ autoPtr<const dimensionedScalar> eleccond1Ptr;
      && transportPropertiesMetal.found(oldKey)
     )
     {
-        Info<< "`createFields.H`:\n\tWarning: using depreciated keyword `" << oldKey << "`. "
+        Info<< "`createFields.H`:\n\tWarning: using depreciated keyword `" 
+            << oldKey << "`. "
             << "Please use `" << newKey << "` in future.\n"
             << "\tWarning: detected both conductivity and resistivity inputs\n"
             << "\t> Prioritising Elec_conductivity. "
@@ -836,7 +837,8 @@ autoPtr<const dimensionedScalar> eleccond1Ptr;
         
         // Optional: check tolerances on inputs
         // - user may not have realised. Throw if out of tolerance
-        const scalar toleranceForCheck = 1e-10;
+        constexpr scalar toleranceForCheck = 10.0 * Foam::SMALL;
+        // - (SMALL is 1e-15 when compiled in double precision)
 
         if (mag(eleccond1Ptr().value() - (1.0/elecres)) <= toleranceForCheck)
         {
@@ -867,7 +869,7 @@ autoPtr<const dimensionedScalar> eleccond1Ptr;
     )
     {
         Info<< "Warning: using depreciated keyword `" << oldKey << "`. "
-            << "Please use `" << newKey << "` in future."
+            << "Please use `" << newKey << "` in future.\n"
             << endl;
 
         // read resistivity as a scalar then invert at `.reset`
