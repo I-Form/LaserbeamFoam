@@ -49,20 +49,60 @@ pVap = 0.54*p0*Foam::exp(LatentHeatVap*Mm*((T - Tvap)/(R*T*Tvap)));
 pVap.correctBoundaryConditions();  // ADDED
 
 
-JcrossB=(J ^ (magperm*H));//.oldTime()
-JcrossB.correctBoundaryConditions();
+// JcrossB=(J ^ (magperm*H));//.oldTime()
+// JcrossB.correctBoundaryConditions();
 
-    fvVectorMatrix UEqn
-    (
-        fvm::ddt(rho, U) + fvm::div(rhoPhi, U)
-      + MRF.DDt(rho, U)
-      + turbulence->divDevRhoReff(rho, U)
-      + fvm::Sp(DC, U)
-      - Marangoni*damper
-      -JcrossB*damper
-     ==
-        fvOptions(rho, U)
-    );
+    // Create local autopointer to reference UEqn outside
+    // of the if statement.
+    autoPtr<fvVectorMatrix> UEqnPtr;
+
+    if (electromagnetics)
+    {
+        // Perform declarations
+        volVectorField& H = HPtr();
+        volVectorField& J = JPtr();
+        volScalarField& magperm = magpermPtr();
+        volVectorField& JcrossB = JcrossBPtr();
+        // < declarations end
+
+        JcrossB=(J ^ (magperm*H));//.oldTime()
+        JcrossB.correctBoundaryConditions();
+
+        UEqnPtr.reset
+        (
+            new fvVectorMatrix
+            (
+                fvm::ddt(rho, U) + fvm::div(rhoPhi, U)
+              + MRF.DDt(rho, U)
+              + turbulence->divDevRhoReff(rho, U)
+              + fvm::Sp(DC, U)
+              - Marangoni*damper
+              - JcrossB*damper
+            ==
+                fvOptions(rho, U)
+            )
+        );
+    }
+    else
+    {
+        UEqnPtr.reset
+        (
+            new fvVectorMatrix
+            (
+                fvm::ddt(rho, U) + fvm::div(rhoPhi, U)
+              + MRF.DDt(rho, U)
+              + turbulence->divDevRhoReff(rho, U)
+              + fvm::Sp(DC, U)
+              - Marangoni*damper
+            //   - JcrossB*damper
+            ==
+                fvOptions(rho, U)
+            )
+        );
+    }
+
+    // set reference as usual.
+    fvVectorMatrix& UEqn = UEqnPtr();
 
     UEqn.relax();
 

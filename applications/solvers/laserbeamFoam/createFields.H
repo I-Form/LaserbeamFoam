@@ -118,7 +118,7 @@ if
 }
 
 
-const Switch electromagnetics(transportProperties.lookupOrDefault<Switch>("electromagnetics", false));
+
 
 
 
@@ -774,239 +774,187 @@ autoPtr<transportModelType> turbulence
 
 
 
-//electromagnetic fields
-
-
-
-
-const dimensionedScalar eleccond1
-(
-    "Elec_conductivity",
-    dimensionSet(-1, -3, 3, 0, 0),
-    transportPropertiesMetal//.lookup("Tsolidus")
-);
-// Info<<Tsolidus1<<endl;
-const dimensionedScalar eleccond2
-(
-    "Elec_conductivity",
-    dimensionSet(-1, -3, 3, 0, 0),
-    transportPropertiesGas//.lookup("Tsolidus")
-);
-
-
-
-const dimensionedScalar magperm1
-(
-    "Mag_permitivity",
-    dimensionSet(1, 1, -2, 0, 0),
-    transportPropertiesMetal//.lookup("Tsolidus")
-);
-// Info<<Tsolidus1<<endl;
-const dimensionedScalar magperm2
-(
-    "Mag_permitivity",
-    dimensionSet(1, 1, -2, 0, 0),
-    transportPropertiesGas//.lookup("Tsolidus")
-);
-
-
-
-volVectorField H
+// Create dependency for `../../../src/MTHD/createFieldsMTHD.H`
+// Note: in compressible* this is required for non-MTHD case also,
+// hence adding this here too. Ideally, should be refactored.
+// > REFACTOR WARNING: `thermophysicalProperties` is changed to
+// `transportProperties`
+IOdictionary phasedictionary
 (
     IOobject
     (
-        "H",
-        runTime.timeName(),
-        mesh,
-        IOobject::MUST_READ,
-        IOobject::AUTO_WRITE
-    ),
-    mesh//,
+    "transportProperties",
+    runTime.constant(),
+    mesh,
+    IOobject::MUST_READ_IF_MODIFIED,
+    IOobject::NO_WRITE
+    )
 );
 
-H.correctBoundaryConditions();
+//MAGNETIC STUFF (includes switch) (start)
 
-volScalarField pH
-(
-    IOobject
+#include "createFieldsMTHD.H"
+//-`createFieldsMTHD.H` includes a call to `#include "createPhiH.H"`
+
+//electromagnetic fields (start)
+
+autoPtr<const dimensionedScalar> eleccond1Ptr;
+
+// Backwards compatability with `elec_resistivity` key word (start)
+//- Scope allocates eleccond1 - [RB] not sure if dimensionedScalar can 
+//  be initialised as empty?
+{
+    // Scope guards for key words
+    const word oldKey = "elec_resistivity";
+    const word newKey = "Elec_conductivity";
+    if 
     (
-        "pH",
-        runTime.timeName(),
-        mesh,
-        IOobject::MUST_READ,
-        IOobject::AUTO_WRITE
-    ),
-    mesh
-);
+        transportPropertiesMetal.found(newKey)
+     && transportPropertiesMetal.found(oldKey)
+    )
+    {
+        Info<< "`createFields.H`:\n\tWarning: using depreciated keyword `" 
+            << oldKey << "`. "
+            << "Please use `" << newKey << "` in future.\n"
+            << "\tWarning: detected both conductivity and resistivity inputs\n"
+            << "\t> Prioritising Elec_conductivity. "
+            << "Check your transportProperties.metal for redundancies!"
+            << endl;
 
-pH.correctBoundaryConditions();
-
-    volVectorField B
-    (
-        IOobject
+        eleccond1Ptr.reset
         (
-            "B",
-            runTime.timeName(),
-            mesh,
-            IOobject::READ_IF_PRESENT,
-            IOobject::AUTO_WRITE
-        ),
-        mesh,
-       dimensionedVector("B",dimensionSet(1,0,-2,0,0),vector::zero)
+            new const dimensionedScalar
+            (
+                "Elec_conductivity",
+                dimensionSet(-1, -3, 3, 0, 0),
+                transportPropertiesMetal
+            )
+        );
+
+        scalar elecres =
+            transportPropertiesMetal.get<scalar>(oldKey);
+
+        
+        // Optional: check tolerances on inputs
+        // - user may not have realised. Throw if out of tolerance
+        constexpr scalar toleranceForCheck = 10.0 * Foam::SMALL;
+        // - (SMALL is 1e-15 when compiled in double precision)
+
+        if (mag(eleccond1Ptr().value() - (1.0/elecres)) <= toleranceForCheck)
+        {
+            Info<< "\t> Note: (Electrical cond & Resis. are within a "
+                << toleranceForCheck
+                << " tolerance)."
+                << "\n\t    Elec res^-1 = " << 1.0/elecres
+                << "\n\t    Elec con    = " << eleccond1Ptr().value()
+                << endl;
+        }
+        else
+        {
+            Info<< "\tCAUTION: Your Elec resistivity and conductivity "
+                << "values are dissimilar!"
+                << "\n\tTolerance   = " << toleranceForCheck
+                << "\n\tElec res^-1 = " << 1.0/elecres
+                << "\n\tElec con    = " << eleccond1Ptr().value()
+                << "\n\tStopping solver!"
+                << endl;
+            exit(-1);
+        }
+    }
+
+    if
+    (
+        (!transportPropertiesMetal.found(newKey))
+     &&   transportPropertiesMetal.found(oldKey)
+    )
+    {
+        Info<< "Warning: using depreciated keyword `" << oldKey << "`. "
+            << "Please use `" << newKey << "` in future.\n"
+            << endl;
+
+        // read resistivity as a scalar then invert at `.reset`
+        scalar elec_resistivity = 
+            transportPropertiesMetal.get<scalar>(oldKey);
+
+        // elec_resistivity += SMALL; // add safety for case of 0?
+
+        eleccond1Ptr.reset
+        (
+            new const dimensionedScalar
+            (
+                "Elec_conductivity",
+                dimensionSet(-1, -3, 3, 0, 0),
+                1.0 / elec_resistivity
+            )
+        );
+    }
+    else
+    {
+        // Logic: assume Elec_conductivity is provided.
+        eleccond1Ptr.reset
+        (
+            new const dimensionedScalar
+            (
+                "Elec_conductivity",
+                dimensionSet(-1, -3, 3, 0, 0),
+                transportPropertiesMetal
+            )
+        );
+    }
+}
+// Backwards compatability with `elec_resistivity` key word (end)
+
+
+autoPtr<const dimensionedScalar> eleccond2Ptr;
+autoPtr<const dimensionedScalar> magperm1Ptr;
+autoPtr<const dimensionedScalar> magperm2Ptr;
+
+if (electromagnetics)
+{
+    // eleccond1Ptr is allocated earlier
+
+    eleccond2Ptr.reset
+    (
+        new const dimensionedScalar
+        (
+            "Elec_conductivity",
+            dimensionSet(-1, -3, 3, 0, 0),
+            transportPropertiesGas
+        )
     );
 
-    B.write();
-
-
-volVectorField J
-(
-    IOobject
+    magperm1Ptr.reset
     (
-        "J",
-        runTime.timeName(),
-        mesh,
-        IOobject::READ_IF_PRESENT,
-        IOobject::AUTO_WRITE
-    ),
-        mesh,
-         dimensionedVector("J", dimensionSet(0, -2, 0, 0, 0), vector::zero)
-        // dimensionedScalar("TRHS",dimensionSet(0, 2, -3, 0, 0),scalar(0.0))
-);
-
-    // J=(1.0/magperm)*fvc::curl(B);
-    // J.correctBoundaryConditions();
-
-
-
-
-            volScalarField Joulesource
-    (
-        IOobject
+        new const dimensionedScalar
         (
-            "Joulesource",
-            runTime.timeName(),
-            mesh,
-            IOobject::NO_READ,
-            IOobject::AUTO_WRITE
-        ),
-        mesh,
-        dimensionedScalar("Joulesource",dimensionSet(1, -1, -3, 0, 0),0.0)
+            "Mag_permitivity",
+            dimensionSet(1, 1, -2, 0, 0),
+            transportPropertiesMetal
+        )
     );
 
-
-volVectorField JcrossB
-(
-    IOobject
+    magperm2Ptr.reset
     (
-        "JcrossB",
-        runTime.timeName(),
-        mesh,
-        IOobject::READ_IF_PRESENT,
-        IOobject::AUTO_WRITE
-    ),
-        mesh,
-         dimensionedVector("JcrossB", dimensionSet(1, -2, -2, 0, 0), vector::zero),
-	    zeroGradientFvPatchVectorField::typeName
-        // dimensionedScalar("TRHS",dimensionSet(0, 2, -3, 0, 0),scalar(0.0))
-);
-
-
-
-        volScalarField divB
-    (
-        IOobject
+        new const dimensionedScalar
         (
-            "divB",
-            runTime.timeName(),
-            mesh,
-            IOobject::NO_READ,
-            IOobject::AUTO_WRITE
-        ),
-        mesh,
-        // dimensionedScalar("divB",dimensionSet(0,-2,0,0,0),0.0)
-        dimensionedScalar("divB",dimensionSet(1,-1,-2,0,0),0.0)
+            "Mag_permitivity",
+            dimensionSet(1, 1, -2, 0, 0),
+            transportPropertiesGas
+        )
     );
+}
 
-
-
-
-        volScalarField eleccond
-    (
-        IOobject
-        (
-            "eleccond",
-            runTime.timeName(),
-            mesh,
-            IOobject::READ_IF_PRESENT,
-            IOobject::AUTO_WRITE
-        ),
-        mesh,
-        dimensionedScalar("eleccond",dimensionSet(-1, -3, 3, 0, 0),0.0),
-                zeroGradientFvPatchScalarField::typeName
-    );
-
-            volScalarField magperm
-    (
-        IOobject
-        (
-            "magperm",
-            runTime.timeName(),
-            mesh,
-            IOobject::READ_IF_PRESENT,
-            IOobject::AUTO_WRITE
-        ),
-        mesh,
-        dimensionedScalar("magperm",dimensionSet(1, 1, -2, 0, 0),0.0),
-                zeroGradientFvPatchScalarField::typeName
-    );
-
-            volScalarField oneoversigma
-    (
-        IOobject
-        (
-            "oneoversigma",
-            runTime.timeName(),
-            mesh,
-            IOobject::READ_IF_PRESENT,
-            IOobject::AUTO_WRITE
-        ),
-        mesh,
-        dimensionedScalar("oneoversigma",dimensionSet(1, 3, -3, 0, 0),0.0),
-                zeroGradientFvPatchScalarField::typeName
-    );
-
-
-
-        volTensorField gradH
-(
-    IOobject
-    (
-        "gradH",
-        runTime.timeName(),
-        mesh,
-        IOobject::READ_IF_PRESENT,
-        IOobject::AUTO_WRITE
-    ),
-        mesh,
-         dimensionedTensor("gradH",dimensionSet(0, -2, 0, 0, 0),tensor::zero),
-                zeroGradientFvPatchTensorField::typeName
-);
-
-
-
-
-
-#include "createPhiH.H"
-
-
-
-//electromagnetic fields
-
+//electromagnetic fields (end)
+//MAGNETIC STUFF (includes switch) (end)
 
 
 
 
 // Electrical resistivity of condensate only
+
+// Reference at point of use
+const dimensionedScalar& eleccond1 = eleccond1Ptr();
+
 volScalarField electrical_resistivity
 (
     IOobject
