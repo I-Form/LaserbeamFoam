@@ -76,8 +76,8 @@ if ${bParallel}; then
         -parallel \
         2>&1 | tee log.compressibleLaserbeamFoam
 else
-    compressibleLaserbeamFoam \
-        2>&1 | tee log.compressibleLaserbeamFoam
+    runApplication compressibleLaserbeamFoam #\
+    #    2>&1 | tee log.compressibleLaserbeamFoam
 fi
 
 touch hartmann1d.foam
