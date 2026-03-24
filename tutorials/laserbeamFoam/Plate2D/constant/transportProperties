@@ -32,7 +32,7 @@ metal
     beta                5.0e-6;
     poly_kappa          (25 0.0 0 0 0 0 0 0);
     poly_cp             (700 0.0 0 0 0 0 0 0);
-    //elec_resistivity	1.0e-6;deprecated - reading in conductivity
+    // elec_resistivity	1.0e-6; //deprecated - reading in conductivity
     Elec_conductivity	1.0e6;
     Mag_permitivity	1.256e-6;
 }

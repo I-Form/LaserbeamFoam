@@ -10,8 +10,16 @@
 
     // electrical resistivity of condensed mixture/
     electrical_resistivity *= 0.0;
-    eleccond *= 0.0;
-    magperm *= 0.0;
+
+    if (electromagnetics)
+    {
+        // Perform declarations
+        volScalarField& eleccond = eleccondPtr();
+        volScalarField& magperm = magpermPtr();
+
+        eleccond *= 0.0;
+        magperm *= 0.0;
+    }
 
     forAllConstIter(PtrDictionary<phaseModel>, mixture.phases(), iter)
     {
@@ -68,9 +76,17 @@
         TSolidus += alpha1*phaseTSolidus;
         TLiquidus += alpha1*phaseTLiquidus;
         LatentHeat += alpha1*phaseLH;
-        eleccond += alpha1*phaseconductivity;
-        magperm += alpha1*phasepermeability;
 
+        if (electromagnetics)
+        {
+            // Note: `eleccon` and `elec_res...` are the same thing.
+            // Perform declarations
+            volScalarField& eleccond = eleccondPtr();
+            volScalarField& magperm = magpermPtr();
+
+            eleccond += alpha1*phaseconductivity;
+            magperm += alpha1*phasepermeability;
+        }
 
         // std::string str2("vapour");
 
@@ -106,8 +122,17 @@
 
 
     electrical_resistivity.correctBoundaryConditions();
-    magperm.correctBoundaryConditions();
-    eleccond.correctBoundaryConditions();
+    
+    if (electromagnetics)
+    {
+        // Perform declarations
+        volScalarField& eleccond = eleccondPtr();
+        volScalarField& magperm = magpermPtr();
+        
+        magperm.correctBoundaryConditions();
+        eleccond.correctBoundaryConditions();
+    }
+
     LatentHeat.correctBoundaryConditions();
     TLiquidus.correctBoundaryConditions();
     TSolidus.correctBoundaryConditions();

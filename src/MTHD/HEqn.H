@@ -1,4 +1,23 @@
 {
+    // Perform declarations
+    volVectorField& H = HPtr();
+    volScalarField& pH = pHPtr();
+    volVectorField& B = BPtr();
+    volVectorField& J = JPtr();
+    volScalarField& Joulesource = JoulesourcePtr();
+    // volVectorField& JcrossB = JcrossBPtr(); // unused here
+    volScalarField& divB = divBPtr();
+    // FD within createPhi.H
+    // n/done
+    volScalarField& eleccond = eleccondPtr();
+    volScalarField& magperm = magpermPtr();
+    volScalarField& oneoversigma = oneoversigmaPtr();
+    // volTensorField& gradH = gradHPtr(); // unused here
+
+    // Raw pointer usage:
+    surfaceScalarField& phiH = *phiHPtr;
+    // < declarations end
+
        while (bpiso.correct())
        {
 
