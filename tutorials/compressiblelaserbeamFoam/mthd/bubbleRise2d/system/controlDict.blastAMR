@@ -1,0 +1,157 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  www.openfoam.com
+    \\  /    A nd           | Version:  v2506
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      controlDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// Load blastAMR libs
+libs
+(
+    libamrDynamicFvMesh.so
+    libamrIndicators.so
+    libamrCPULoad.so
+);
+
+application     compressibleMultiphaseInterFoam;
+
+startFrom       latestTime;
+
+startTime       0;
+
+stopAt          endTime; // endTime; writeNow
+
+endTime         0.01; // 1.0; //12.0;
+
+deltaT          1e-12;
+
+writeControl    adjustableRunTime; // timeStep; adjustableRunTime;
+
+writeInterval   0.01; //1e-4; // 1e-2; //0.01;
+
+purgeWrite      0;
+
+writeFormat     ascii;
+
+writePrecision  10;
+
+writeCompression off;
+
+timeFormat      general;
+
+timePrecision   10;
+
+runTimeModifiable yes;
+
+adjustTimeStep  yes;
+
+maxCo           0.1; // 1.5; //0.9;
+maxAlphaCo      0.1; // 1.5; //0.9;
+
+maxDeltaT       0.5; // 1e-2;
+
+
+// ************************************************************************* //
+
+DebugSwitches
+{
+    // Combined_Residual_Tracking 1; // use any value >0.
+}
+
+// functions
+// {
+//     totalMass
+//     {
+//         type            coded;
+//         libs            ("libutilityFunctionObjects.so");
+//         name            totalMass;
+//         writeControl    writeTime;
+//         executeControl  writeTime;
+
+//         codeInclude
+//         #{
+//             #include "volFieldsFwd.H"
+//             #include "OFstream.H"   
+//         #};
+
+//         codeData
+//         #{
+//             autoPtr<OFstream> file_ptr;
+//         #};
+
+//         codeRead
+//         #{
+            
+//             file_ptr.reset(new OFstream("post_processing/total_mass.dat"));
+//             // file_ptr->format(IOStream::scientific);
+//             file_ptr->precision(12);
+//             // Write CSV header:
+//             file_ptr() << "Time,Mass_air,Mass_fictum,rho_air_mean,rho_air_min,rho_air_max,rho_fictum_mean,rho_fictum_min,rho_fictum_max" << endl;
+//         #};
+
+//         codeWrite
+//         #{
+//             const volScalarField& alphaGas = mesh().lookupObject<volScalarField>("alpha.air");
+//             const volScalarField& rhoGas = mesh().lookupObject<volScalarField>("thermo:rho.air");
+
+//             const volScalarField& alphaMetal = mesh().lookupObject<volScalarField>("alpha.fictum");
+//             const volScalarField& rhoMetal = mesh().lookupObject<volScalarField>("thermo:rho.fictum");
+
+//             const scalarField& v = mesh().V();
+
+//             const scalar total_mass_gas   = gSum(alphaGas * rhoGas * v);
+//             const scalar total_mass_metal = gSum(alphaMetal * rhoMetal * v);
+
+//             Info<< "coded totalMass output:" << endl
+//                 << "    volIntegrate(all) for alpha.gas * rho.gas = "
+//                 << total_mass_gas << endl
+//                 << "coded totalMass output:" << endl
+//                 << "    volIntegrate(all) for alpha.fictum * rho.fictum = "
+//                 << total_mass_metal << endl
+//                 << endl;
+
+//             Info<< "(debug: rho_gas mean = " 
+//                 << gAverage(rhoGas)
+//                 << ", min = " << gMin(rhoGas)
+//                 << ", max = " << gMax(rhoGas) << endl
+//                 << "     rho_fictum mean = "
+//                 << gAverage(rhoMetal)
+//                 << ", min = " << gMin(rhoMetal)
+//                 << ", max = " << gMax(rhoMetal) << ")"
+//                 << endl 
+//                 << endl;
+
+//             if (true) //(PStream::myProcNo() == 0)
+//             {
+//                 // file_ptr->precision(12);
+//                 file_ptr() << mesh().time().timeName()
+//                         << ","
+//                         << total_mass_gas
+//                         << ","
+//                         << total_mass_metal
+//                         << ","
+//                         << gAverage(rhoGas)
+//                         << ","
+//                         << gMin(rhoGas)
+//                         << ","
+//                         << gMax(rhoGas)
+//                         << ","
+//                         << gAverage(rhoMetal)
+//                         << ","
+//                         << gMin(rhoMetal)
+//                         << ","
+//                         << gMax(rhoMetal)
+//                         << endl;
+//             }
+//         #};
+//     }
+// }
