@@ -11,7 +11,7 @@ The problem is steady state with 2 spatial dimensions $(x,y)$, with the axial
 $x$ direction being fully developed. The $y$ direction is the transverse 
 direction.
 
-A axial flow, $U_x$, of a MHD fluid is induced by a fixed pressure inlet and 
+An axial flow, $U_x$, of a MHD fluid is induced by a fixed pressure inlet and 
 outlet, across a single mesh cell width. 
 With the inlet and outlet being a `zeroGradient` wall for the velocity 
 $\vec{U}$.
@@ -36,7 +36,7 @@ _Ch. IV: II.2 Hartmann flow_ in [1].
 - The electrical conductivity may be changed in `./constant/properties_reference`.
 - Due to the usage of a steady state solver, under relaxation factors are 
   recommended.
-  
+
 ## References
 [1] R. Moreau, Magnetohydrodynamics. Springer Nature (Netherlands), 1990. 
 doi:
