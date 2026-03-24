@@ -10,7 +10,6 @@ cp -r initial 0
 find 0 -name "*.orig" -exec bash -c 'cp "$0" "${0%.orig}"' {} \;
 
 runApplication blockMesh
-cat log.blockMesh
 
 
 bParallel=false

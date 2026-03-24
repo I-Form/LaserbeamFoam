@@ -33,7 +33,7 @@ B_target    1;
 
 // Compute H for constant B initial conditions
 // > `B = mu * H`, or $\vec{B} = \mu \, \vec{H}$.
-H_air_target  #calc "$B_target / $magnetic_permeability_air_";
+H_air_target  #eval "$B_target / $magnetic_permeability_air_";
 
 // Note: `z` axis on 2D will result in solution singularity.
 H_air (0 $H_air_target 0);

@@ -17,7 +17,7 @@ FoamFile
 scale 1;
 
 // Background mesh sizing
-dx 0.5e-3; // #calc "(20.0e-3)/40.0";
+dx 0.5e-3; // #eval "(20.0e-3)/40.0";
 
 // Automated sizing below (no user modification required)
 xmin $xmin_value ;
@@ -27,8 +27,8 @@ ymax $ymax_value ;
 zmin 0;
 zmax 10.1e-3;
 
-nx #calc "abs(($xmax - $xmin) / $dx)";
-ny #calc "abs(($ymax - $ymin) / $dx)";
+nx #eval "mag(($xmax - $xmin) / $dx)";
+ny #eval "mag(($ymax - $ymin) / $dx)";
 
 vertices        
 (
