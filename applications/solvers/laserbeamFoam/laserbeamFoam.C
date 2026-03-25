@@ -68,7 +68,7 @@ Authors
 #include "Polynomial.H"
 #include "laserHeatSource.H"
 
-#include "createFieldsHelpers.H"
+#include "helperFunctions.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -91,14 +91,14 @@ int main(int argc, char *argv[])
     #include "initContinuityErrs.H"
     #include "createDyMControls.H"
 
-    
+
     //     const dictionary& Bpiso = mesh.solutionDict().subDict("BPISO");
 
     // const int nBcorr = Bpiso.getOrDefault<int>("nCorrectors", 1);
 
 
 
-    
+
     pimpleControl bpiso(mesh, "BPISO"); //Roman, can you check this - I moved from piso to pimplecontrol
 
     #include "createFields.H"
