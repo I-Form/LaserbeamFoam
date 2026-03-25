@@ -68,6 +68,8 @@ Authors
 #include "Polynomial.H"
 #include "laserHeatSource.H"
 
+#include "createFieldsHelpers.H"
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 int main(int argc, char *argv[])

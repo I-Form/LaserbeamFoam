@@ -800,110 +800,16 @@ IOdictionary phasedictionary
 
 autoPtr<const dimensionedScalar> eleccond1Ptr;
 
-// Backwards compatability with `elec_resistivity` key word (start)
-//- Scope allocates eleccond1 - [RB] not sure if dimensionedScalar can 
-//  be initialised as empty?
-{
-    // Scope guards for key words
-    const word oldKey = "elec_resistivity";
-    const word newKey = "Elec_conductivity";
-    if 
-    (
-        transportPropertiesMetal.found(newKey)
-     && transportPropertiesMetal.found(oldKey)
-    )
-    {
-        Info<< "`createFields.H`:\n\tWarning: using depreciated keyword `" 
-            << oldKey << "`. "
-            << "Please use `" << newKey << "` in future.\n"
-            << "\tWarning: detected both conductivity and resistivity inputs\n"
-            << "\t> Prioritising Elec_conductivity. "
-            << "Check your transportProperties.metal for redundancies!"
-            << endl;
-
-        eleccond1Ptr.reset
-        (
-            new const dimensionedScalar
-            (
-                "Elec_conductivity",
-                dimensionSet(-1, -3, 3, 0, 0),
-                transportPropertiesMetal
-            )
-        );
-
-        scalar elecres =
-            transportPropertiesMetal.get<scalar>(oldKey);
-
-        
-        // Optional: check tolerances on inputs
-        // - user may not have realised. Throw if out of tolerance
-        constexpr scalar toleranceForCheck = 10.0 * Foam::SMALL;
-        // - (SMALL is 1e-15 when compiled in double precision)
-
-        if (mag(eleccond1Ptr().value() - (1.0/elecres)) <= toleranceForCheck)
-        {
-            Info<< "\t> Note: (Electrical cond & Resis. are within a "
-                << toleranceForCheck
-                << " tolerance)."
-                << "\n\t    Elec res^-1 = " << 1.0/elecres
-                << "\n\t    Elec con    = " << eleccond1Ptr().value()
-                << endl;
-        }
-        else
-        {
-            Info<< "\tCAUTION: Your Elec resistivity and conductivity "
-                << "values are dissimilar!"
-                << "\n\tTolerance   = " << toleranceForCheck
-                << "\n\tElec res^-1 = " << 1.0/elecres
-                << "\n\tElec con    = " << eleccond1Ptr().value()
-                << "\n\tStopping solver!"
-                << endl;
-            exit(-1);
-        }
-    }
-
-    if
-    (
-        (!transportPropertiesMetal.found(newKey))
-     &&   transportPropertiesMetal.found(oldKey)
-    )
-    {
-        Info<< "Warning: using depreciated keyword `" << oldKey << "`. "
-            << "Please use `" << newKey << "` in future.\n"
-            << endl;
-
-        // read resistivity as a scalar then invert at `.reset`
-        scalar elec_resistivity = 
-            transportPropertiesMetal.get<scalar>(oldKey);
-
-        // elec_resistivity += SMALL; // add safety for case of 0?
-
-        eleccond1Ptr.reset
-        (
-            new const dimensionedScalar
-            (
-                "Elec_conductivity",
-                dimensionSet(-1, -3, 3, 0, 0),
-                1.0 / elec_resistivity
-            )
-        );
-    }
-    else
-    {
-        // Logic: assume Elec_conductivity is provided.
-        eleccond1Ptr.reset
-        (
-            new const dimensionedScalar
-            (
-                "Elec_conductivity",
-                dimensionSet(-1, -3, 3, 0, 0),
-                transportPropertiesMetal
-            )
-        );
-    }
-}
-// Backwards compatability with `elec_resistivity` key word (end)
-
+// eleccond1 is always read!
+// Backwards compatability with `elec_resistivity` key word
+lookupConstDimensionedScalarWithDepreciationCheck
+(
+    eleccond1Ptr,
+    dimensionSet(-1, -3, 3, 0, 0),
+    transportPropertiesMetal,
+    "elec_resistivity",
+    "Elec_conductivity"
+);
 
 autoPtr<const dimensionedScalar> eleccond2Ptr;
 autoPtr<const dimensionedScalar> magperm1Ptr;
@@ -913,14 +819,15 @@ if (electromagnetics)
 {
     // eleccond1Ptr is allocated earlier
 
-    eleccond2Ptr.reset
+    // Dynamically assign `eleccond2` values
+    // Backwards compatability with `elec_resistivity` key word
+    lookupConstDimensionedScalarWithDepreciationCheck
     (
-        new const dimensionedScalar
-        (
-            "Elec_conductivity",
-            dimensionSet(-1, -3, 3, 0, 0),
-            transportPropertiesGas
-        )
+        eleccond2Ptr,
+        dimensionSet(-1, -3, 3, 0, 0),
+        transportPropertiesGas,
+        "elec_resistivity",
+        "Elec_conductivity"
     );
 
     magperm1Ptr.reset
