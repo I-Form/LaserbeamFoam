@@ -1,20 +1,20 @@
 #ifndef LASERBEAMFOAM_HELPER_FUNCTIONS
 #define LASERBEAMFOAM_HELPER_FUNCTIONS
 // Description:
-// Contains definitions for local helper functions (currently just 1). 
-// 
-// Presently, only used for reading electrical conductivities and where a check 
+// Contains definitions for local helper functions (currently just 1).
+//
+// Presently, only used for reading electrical conductivities and where a check
 // is required against the depreciated `elec_resistivity` keyword.
-// 
+//
 // In future this likely will be replaced with something simpler.
 //
 // Mostly exists for 'Do Not Repeat yourself'.
-// 
+//
 // (Note to other devs: originally this was going to be templated, but
 //  the types have unique constructors, so this one just focuses on
 //  the MTHD properties. If it's decided to strip this down or out, that
 //  is fine. - RB)
-// 
+//
 // (end).
 
 
@@ -47,19 +47,19 @@ lookupWithDepreciationCheck<dimensionedScalar>
 ```
 */
 {
-    if 
+    if
     (
         targetDictionary.found(newKeyword)
      && targetDictionary.found(oldKeyword)
     )
     {
-        Info<< "`createFields.H`:\n\tWarning: using depreciated keyword `" 
+        Info<< "`createFields.H`:\n\tWarning: using depreciated keyword `"
             << oldKeyword << "`. "
             << "Please use `" << newKeyword << "` in future.\n"
             << "\tWarning: detected both "
             << oldKeyword << " and " << newKeyword<< "\n"
             << "\t> Prioritising " << newKeyword <<". "
-            << "Check your dictionary for redundancies(!), at:\n" 
+            << "Check your dictionary for redundancies(!), at:\n"
             << targetDictionary.name()
             << endl;
 
@@ -76,32 +76,32 @@ lookupWithDepreciationCheck<dimensionedScalar>
         scalar oldScalarValue =
             targetDictionary.get<scalar>(oldKeyword);
 
-        
+
         // Optional: check tolerances on inputs
         // - user may not have realised. Throw if out of tolerance
         constexpr scalar toleranceForCheck = 10.0 * Foam::SMALL;
         // - (SMALL is 1e-15 when compiled in double precision)
 
-        if 
+        if
         (
-            mag(objectPtr().value() - (1.0/oldScalarValue)) 
+            mag(objectPtr().value() - (1.0/oldScalarValue))
             <= toleranceForCheck
         )
         {
-            Info<< "\t> Note: (" << newKeyword << " & " << oldKeyword 
+            Info<< "\t> Note: (" << newKeyword << " & " << oldKeyword
                 << " are within a "
                 << toleranceForCheck
                 << " tolerance)."
-                << "\n\t    " << oldKeyword << "^-1\t\t= " 
+                << "\n\t    " << oldKeyword << "^-1\t\t= "
                 << 1.0/oldScalarValue
-                << "\n\t    " << newKeyword << "\t\t= " 
+                << "\n\t    " << newKeyword << "\t\t= "
                 << objectPtr().value()
                 << endl;
         }
         else
         {
             FatalErrorInFunction
-                << "\tCAUTION: Your " << oldKeyword << " and " 
+                << "\tCAUTION: Your " << oldKeyword << " and "
                 << newKeyword << " "
                 << "values are dissimilar!"
                 << "\n\tTolerance   = " << toleranceForCheck
@@ -119,13 +119,13 @@ lookupWithDepreciationCheck<dimensionedScalar>
      &&   targetDictionary.found(oldKeyword)
     )
     {
-        Info<< "Warning: using depreciated keyword `" 
+        Info<< "Warning: using depreciated keyword `"
             << oldKeyword << "`. "
             << "Please use `" << newKeyword << "` in future.\n"
             << endl;
 
         // read resistivity as a scalar then invert at `.reset`
-        scalar oldScalarValue = 
+        scalar oldScalarValue =
             targetDictionary.get<scalar>(oldKeyword);
 
         // oldScalarValue += SMALL; // add safety for case of 0?
