@@ -29,12 +29,12 @@
 
 
 
-surfaceScalarField muPhiH = fvc::interpolate(magperm)*phiH;
-surfaceScalarField muPhi = fvc::interpolate(magperm)*phi;
+surfaceScalarField muPhiH(fvc::interpolate(magperm)*phiH);
+surfaceScalarField muPhi(fvc::interpolate(magperm)*phi);
 
 
 
-volTensorField TgradH = fvc::grad(H)().T();
+volTensorField TgradH(fvc::grad(H)().T());
 TgradH.correctBoundaryConditions();
 
 
@@ -94,7 +94,7 @@ H.correctBoundaryConditions();
 
                 if (bpiso.finalNonOrthogonalIter())
                 {
-                    
+
 
                     phiH =phiHbyAH - (pHEqn.flux())/fvc::interpolate(magperm);
 
@@ -109,7 +109,7 @@ H.correctBoundaryConditions();
 
 
 
-surfaceScalarField phiB = phiH*fvc::interpolate(magperm);
+surfaceScalarField phiB(phiH*fvc::interpolate(magperm));
 #include "magneticFieldErr.H"
 
 

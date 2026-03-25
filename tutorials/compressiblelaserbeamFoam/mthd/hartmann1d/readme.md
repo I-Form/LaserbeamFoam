@@ -1,7 +1,17 @@
 # Hartmann 1D
 **This case is intended as a simple smoke test for the MHD model solvers.**
 
-A planar Hartmann problem solved in steady state.
+A planar Hartmann problem solved in steady state. Using a pseudo-incompressible
+density model:
+$$
+\begin{gather*}
+    \rho(p,T) = \rho_\mathrm{actual} + \frac{p}{R_\mathrm{pseudo} \, T}
+\\
+    R_{\mathrm{psuedo}} = 10^{5}
+\end{gather*}
+$$
+(The pseudo-incompressible model is purely to prevent numerical stiffness
+when solving for the pressure `p_rgh`).
 
 ## Description
 This is a simple planar Hartmann flow problem and is similar to a planar 
