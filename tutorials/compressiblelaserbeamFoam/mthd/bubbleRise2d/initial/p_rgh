@@ -33,20 +33,20 @@ boundaryField
         // // type            prghTotalPressure; // fixedFluxPressure;
         // // p0              uniform 100200.0;
 
-        
+
         // // // * * prgh Pressure * * //
         // // // See: https://www.openfoam.com/documentation/guides/latest/api/classFoam_1_1prghPressureFvPatchScalarField.html
         // // type            prghPressure;
         // // rho             rho;
         // // p               uniform 100025 ;// uniform 0;
         // // value           uniform 100025 ; // Initial value
-        
+
 
 
         // // * * Coded mimicry of fixed inlet * * //
         // type codedFixedValue;
         // value uniform 100025; // Initial placeholder value
-        
+
         // //redirectType codedFixedValue;
 
         // name adjustedInlet;
@@ -54,7 +54,7 @@ boundaryField
         // #{
         //     //const vectorField& positions = this->mesh.C().boundaryField()[patchID];
         //     const fvPatch& boundaryPatch = this->patch();
-        //     const vectorField& Cf = boundaryPatch.Cf(); 
+        //     const vectorField& Cf = boundaryPatch.Cf();
 
         //     const scalar L0 = -0.5 ; //$L0value ; (referencing is not working here?)
         //     const scalar L1 =  0.5 ; // $L1value ;
@@ -83,7 +83,7 @@ boundaryField
         //         }
         //     }
         // #};
-    
+
     }
 
     rightWall
@@ -112,7 +112,7 @@ boundaryField
     {
         // type            prghTotalPressure;
         // p0              uniform 1e5;
-        // rho             thermo:rho.fictum;
+        // rho             thermo:rho.GaInSn;
         type            totalPressure;
         p0              uniform 1e5;
 

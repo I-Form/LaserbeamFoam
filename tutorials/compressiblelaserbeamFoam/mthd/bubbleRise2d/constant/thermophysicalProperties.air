@@ -19,7 +19,7 @@ thermoType
     mixture         pureMixture;
     transport       const;
     thermo          hConst;
-    equationOfState perfectFluid;//perfectFluid; // perfectGas; perfectFluid; rhoConst
+    equationOfState perfectFluid;
     specie          specie;
     energy          sensibleInternalEnergy;
 }
@@ -31,10 +31,10 @@ thermoType
 
 // ARGON
 
-magnetic_permeability	$magnetic_permeability_argon_;      // 1.256e-6;
-elec_conductivity       $elec_conductivity_argon_;          // 1.0e1;
-TSolidus	1.0001;
-TLiquidus	1.0;
+magnetic_permeability	$magnetic_permeability_argon_;
+elec_conductivity       $elec_conductivity_argon_;
+TSolidus	1.0;
+TLiquidus	1.0001;
 LatentHeat	1.0;
 
 mixture
@@ -53,8 +53,11 @@ mixture
     }
     thermodynamics
     {
-        Cp          0.5204265545208772e+3; // Cp [J / mol K]= 20.79; M = 39.948 [GRAMS! / M] -> add 1e+3 at end!
-                                        // => Cp/M = 0.52... [J / kg K]
+        Cp          0.5204265545208772e+3;
+        //- Notes on Cp calculation:
+        //  Cp [J / mol K]= 20.79; M = 39.948 [GRAMS! / M] ->  *1e+3 at end!
+        //  => Cp/M = 0.52... [J / kg K]
+
         Cv          0.5e+3;
         Hf          0;
     }

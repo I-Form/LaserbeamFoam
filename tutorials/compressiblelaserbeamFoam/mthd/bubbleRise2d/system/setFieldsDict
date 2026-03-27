@@ -20,10 +20,10 @@ FoamFile
 defaultFieldValues
 (
     volScalarFieldValue alpha.air 0
-    volScalarFieldValue alpha.fictum 1
+    volScalarFieldValue alpha.GaInSn 1
 
     volVectorFieldValue U $U_initial_vector_values
-    volVectorFieldValue H $H_ga // $H_fictum
+    volVectorFieldValue H $H_ga // $H_GaInSn
 );
 
 regions
@@ -36,7 +36,7 @@ regions
         fieldValues
         (
             volScalarFieldValue alpha.air           1.0
-            volScalarFieldValue alpha.fictum 0.0
+            volScalarFieldValue alpha.GaInSn 0.0
 
             volVectorFieldValue H $H_air
         );
@@ -83,7 +83,7 @@ regions
             volVectorFieldValue U ($pertubtation_velocity 0 0)
         );
     }
-    
+
     boxToCell
     {
         box (-1 80e-3 -1) (1 90e-3 1);
@@ -100,7 +100,7 @@ regions
             volVectorFieldValue U ($pertubtation_velocity 0 0)
         );
     }
-    
+
     boxToCell
     {
         box (-1 100e-3 -1) (1 110e-3 1);
@@ -117,7 +117,7 @@ regions
             volVectorFieldValue U ($pertubtation_velocity 0 0)
         );
     }
-    
+
     boxToCell
     {
         box (-1 120e-3 -1) (1 120e-3 1);

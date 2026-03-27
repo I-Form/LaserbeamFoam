@@ -25,13 +25,13 @@ boundaryField
         type            alphaContactAngle;
         thetaProperties
         (
-            ( fictum air ) 90 0 0 0
+            ( GaInSn air ) 90 0 0 0
         );
         value           uniform 0;
 
 
         // type zeroGradient;
-        
+
         // type            inletOutlet; // <------ USE THIS but coded
         // inletValue      uniform 1;
         // value           uniform 0;
@@ -41,7 +41,7 @@ boundaryField
         type            alphaContactAngle;
         thetaProperties
         (
-            ( fictum air ) 90 0 0 0
+            ( GaInSn air ) 90 0 0 0
         );
         value           uniform 0;
     }
@@ -51,7 +51,7 @@ boundaryField
         type            alphaContactAngle;
         thetaProperties
         (
-            ( fictum air ) 90 0 0 0
+            ( GaInSn air ) 90 0 0 0
         );
         value           uniform 0;
     }

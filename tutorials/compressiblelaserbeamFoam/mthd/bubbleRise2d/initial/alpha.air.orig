@@ -47,7 +47,7 @@ boundaryField
         //     // water           { theta0 90; }
         //     // mercury         { theta0 90; }
         //     Fe              { theta0 90; }
-        //     fictum          { theta0 90; }
+        //     GaInSn          { theta0 90; }
         // }
         // value           uniform 0;
     }

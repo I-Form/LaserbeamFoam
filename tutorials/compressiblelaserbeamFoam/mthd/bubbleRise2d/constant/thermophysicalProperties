@@ -15,9 +15,9 @@ FoamFile
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 #include "../initial/initial_values"
 
-phases (air fictum);
+phases (air GaInSn);
 
-// For Compressible code * * * * * * * * * * * * * * * * * * * * * * * * * * 
+// For Compressible code * * * * * * * * * * * * * * * * * * * * * * * * * *
 
 pMin                    -10000.0;
 P0                      $p_internal;
@@ -27,16 +27,12 @@ electromagnetics        true;
 
 boils
 (
-    (air fictum)        1e-9
-    (air wall)          1e-9
-    (fictum wall)       1e-9
+    (air GaInSn)        1e-9
 );
 
 LatentHeatGas // Caution - do not use zero for pairs (div zero error)
 (
-    (air fictum)        1e-9
-    (air wall)          1e-9
-    (fictum wall)       1e-9
+    (air GaInSn)        1e-9
 );
 
 
@@ -44,27 +40,22 @@ LatentHeatGas // Caution - do not use zero for pairs (div zero error)
 
 sigmas
 (
-    (air fictum)        585e-3
-    (air wall)          0.0
-    (wall fictum)       0.0
+    (air GaInSn)        585e-3
 );
 
 dsigmadT
 (
-    (air fictum)        0.0
-    (air wall)          0.0
-    (wall fictum)       0.0
+    (air GaInSn)        0.0
 );
 
 interfaceCompression
 (
-    (air fictum)        1.0
+    (air GaInSn)        1.0
 );
 
 interfaceDiffusion
 (
-    (air fictum)        0.0
+    (air GaInSn)        0.0
 );
-
 
 // ************************************************************************* //

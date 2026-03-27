@@ -10,7 +10,7 @@ FoamFile
     format      ascii;
     class       dictionary;
     location    "constant";
-    object      physicalProperties.fictum; //GaInSn;
+    object      physicalProperties.GaInSn;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 thermoType
@@ -19,11 +19,11 @@ thermoType
     mixture         pureMixture;
     transport       const;
     thermo          eConst;
-    equationOfState perfectFluid; // rhoConst;perfectFluid; Boussinesq
+    equationOfState perfectFluid; // Pseudo-incompressible
     specie          specie;
     energy          sensibleInternalEnergy;
 }
-/* Citations: 
+/* Citations:
     [1] https://pubs.acs.org/doi/full/10.1021/je400882q (For all propreties*)
     [2] https://www.santechchem.com/introduction-of-galinstan-221.html (*For heat capcity, which is not listed)
 
@@ -47,8 +47,8 @@ Temp = 20 deg
 magnetic_permeability	$magnetic_permeability_ga_; // 1.256e-6;
 elec_conductivity	    $elec_conductivity_ga_;     // 3.46e6;
 
-TSolidus	1.0001;
-TLiquidus	1.0; // Enforce liquid
+TSolidus	1.0;
+TLiquidus	1.0001; // Enforce liquid
 LatentHeat	1.0;
 
 // Unused: Latentheatgas 12.7;
@@ -61,30 +61,14 @@ mixture
         molWeight   84.317125e-3; // kg/mol
     }
     equationOfState
-    {   
+    {
         // constant
-        rho         6360; // kg/m^3
+        // rho         6360; // kg/m^3
 
-        // // Perfect fluid
-            rho0        6360; // kg/m^3
-            R           1e6; // Artificial value to prevent stiffness
-            // R           98.60941793441414; // Actual R value - invalid usage
-        /*
-        dx.doi.org/10.1021/je400882q
-        equation (9) states
-
-            rho = rho0 + (drho/dT)*(T-T_melt)
-        - rho0 = 6580 kg/m^3 (at T = T_melt)
-        - (drho/dT) = -7.76e-4 g.cm^(-3).K^(-1)
-
-        Hence model is icoPolynomial
-        */
-        // rhoCoeffs<2> (6580.1512 -0.776); (must be of size 8, avoid)
-
-        // Boussinesq ---------------------- //
-            // beta    -0.0001220125786163522;
-            // rho0    6360.0;
-            // T0      283.7;
+        // Perfect fluid
+        rho0        6360; // kg/m^3
+        R           1e6;  // Artificial value to prevent stiffness
+        // R           98.60941793441414; // Actual R value - invalid usage
     }
     thermodynamics
     {
@@ -95,7 +79,7 @@ mixture
     }
     transport
     {
-        mu          2.18e-3; 
+        mu          2.18e-3;
         Pr          0.026445901639344266; // manually calculated
 
         // kappa       24.4; // W / (m . K)
@@ -104,7 +88,7 @@ mixture
         Assumed constant, I believe linearly extrapolated from T:(299,307)
         */
     }
-    
+
     Tvap 1e+32;
 }
 
