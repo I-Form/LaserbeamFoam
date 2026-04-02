@@ -277,20 +277,12 @@ volScalarField TSolidus
 
 
 
-IOdictionary phasedictionary
-(
-    IOobject
-    (
-    "thermophysicalProperties",
-    runTime.constant(),
-    mesh,
-    IOobject::MUST_READ_IF_MODIFIED,
-    IOobject::NO_WRITE
-    )
-);
+autoPtr<mthdModel> mthd(nullptr);
 
-//MAGNETIC STUFF
-#include "createFieldsMTHD.H"
+if (mthdModel::electromagneticsEnabled(mesh, "thermophysicalProperties"))
+{
+    mthd.reset(new mthdModel(mesh, "thermophysicalProperties"));
+}
 
 
 const dimensionedScalar DarcyConstantlarge

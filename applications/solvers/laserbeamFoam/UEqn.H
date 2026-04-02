@@ -49,83 +49,50 @@ pVap = 0.54*p0*Foam::exp(LatentHeatVap*Mm*((T - Tvap)/(R*T*Tvap)));
 pVap.correctBoundaryConditions();  // ADDED
 
 
-// JcrossB=(J ^ (magperm*H));//.oldTime()
-// JcrossB.correctBoundaryConditions();
+if (mthd.valid())
+{
+    mthd->updateLorentzForce();
+}
 
-    // Create local autopointer to reference UEqn outside
-    // of the if statement.
-    autoPtr<fvVectorMatrix> UEqnPtr;
+const volVectorField& JcrossB =
+    mthd.valid()
+  ? mthd->JcrossB()
+  : volVectorField::null();
 
-    if (electromagnetics)
-    {
-        // Perform declarations
-        volVectorField& H = HPtr();
-        volVectorField& J = JPtr();
-        volScalarField& magperm = magpermPtr();
-        volVectorField& JcrossB = JcrossBPtr();
-        // < declarations end
+fvVectorMatrix UEqn
+(
+    fvm::ddt(rho, U) + fvm::div(rhoPhi, U)
+  + MRF.DDt(rho, U)
+  + turbulence->divDevRhoReff(rho, U)
+  + fvm::Sp(DC, U)
+  - Marangoni*damper
+  - JcrossB*damper
+ ==
+    fvOptions(rho, U)
+);
 
-        JcrossB=(J ^ (magperm*H));//.oldTime()
-        JcrossB.correctBoundaryConditions();
+UEqn.relax();
 
-        UEqnPtr.reset
+fvOptions.constrain(UEqn);
+
+if (pimple.momentumPredictor())
+{
+    solve
+    (
+        UEqn
+     ==
+        fvc::reconstruct
         (
-            new fvVectorMatrix
             (
-                fvm::ddt(rho, U) + fvm::div(rhoPhi, U)
-              + MRF.DDt(rho, U)
-              + turbulence->divDevRhoReff(rho, U)
-              + fvm::Sp(DC, U)
-              - Marangoni*damper
-              - JcrossB*damper
-            ==
-                fvOptions(rho, U)
-            )
-        );
-    }
-    else
-    {
-        UEqnPtr.reset
-        (
-            new fvVectorMatrix
-            (
-                fvm::ddt(rho, U) + fvm::div(rhoPhi, U)
-              + MRF.DDt(rho, U)
-              + turbulence->divDevRhoReff(rho, U)
-              + fvm::Sp(DC, U)
-              - Marangoni*damper
-            //   - JcrossB*damper
-            ==
-                fvOptions(rho, U)
-            )
-        );
-    }
+                mixture.surfaceTensionForce()*fvc::interpolate(damper)
+                + (fvc::interpolate(pVap)
+                    *fvc::snGrad(alpha1)
+                    *fvc::interpolate(damper))
+              - ghf*fvc::snGrad(rho*rhok)
+              - fvc::snGrad(p_rgh)
+            ) * mesh.magSf()
+        )
+    );
 
-    // set reference as usual.
-    fvVectorMatrix& UEqn = UEqnPtr();
-
-    UEqn.relax();
-
-    fvOptions.constrain(UEqn);
-
-    if (pimple.momentumPredictor())
-    {
-        solve
-        (
-            UEqn
-         ==
-            fvc::reconstruct
-            (
-                (
-                    mixture.surfaceTensionForce()*fvc::interpolate(damper)
-                    + (fvc::interpolate(pVap)
-                        *fvc::snGrad(alpha1)
-                        *fvc::interpolate(damper))
-                  - ghf*fvc::snGrad(rho*rhok)
-                  - fvc::snGrad(p_rgh)
-                ) * mesh.magSf()
-            )
-        );
-
-        fvOptions.correct(U);
-    }
+    fvOptions.correct(U);
+}

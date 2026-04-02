@@ -774,93 +774,15 @@ autoPtr<transportModelType> turbulence
 
 
 
-// Create dependency for `../../../src/MTHD/createFieldsMTHD.H`
-// Note: in compressible* this is required for non-MTHD case also,
-// hence adding this here too. Ideally, should be refactored.
-// > REFACTOR WARNING: `thermophysicalProperties` is changed to
-// `transportProperties`
-IOdictionary phasedictionary
-(
-    IOobject
-    (
-    "transportProperties",
-    runTime.constant(),
-    mesh,
-    IOobject::MUST_READ_IF_MODIFIED,
-    IOobject::NO_WRITE
-    )
-);
+autoPtr<mthdModel> mthd(nullptr);
 
-//MAGNETIC STUFF (includes switch) (start)
-
-#include "createFieldsMTHD.H"
-//-`createFieldsMTHD.H` includes a call to `#include "createPhiH.H"`
-
-//electromagnetic fields (start)
-
-autoPtr<const dimensionedScalar> eleccond1Ptr;
-
-// eleccond1 is always read!
-// Backwards compatability with `elec_resistivity` key word
-lookupConstDimensionedScalarWithDepreciationCheck
-(
-    eleccond1Ptr,
-    dimensionSet(-1, -3, 3, 0, 0),
-    transportPropertiesMetal,
-    "elec_resistivity",
-    "Elec_conductivity"
-);
-
-autoPtr<const dimensionedScalar> eleccond2Ptr;
-autoPtr<const dimensionedScalar> magperm1Ptr;
-autoPtr<const dimensionedScalar> magperm2Ptr;
-
-if (electromagnetics)
+if (mthdModel::electromagneticsEnabled(mesh, "transportProperties"))
 {
-    // eleccond1Ptr is allocated earlier
-
-    // Dynamically assign `eleccond2` values
-    // Backwards compatability with `elec_resistivity` key word
-    lookupConstDimensionedScalarWithDepreciationCheck
-    (
-        eleccond2Ptr,
-        dimensionSet(-1, -3, 3, 0, 0),
-        transportPropertiesGas,
-        "elec_resistivity",
-        "Elec_conductivity"
-    );
-
-    magperm1Ptr.reset
-    (
-        new const dimensionedScalar
-        (
-            "Mag_permitivity",
-            dimensionSet(1, 1, -2, 0, 0),
-            transportPropertiesMetal
-        )
-    );
-
-    magperm2Ptr.reset
-    (
-        new const dimensionedScalar
-        (
-            "Mag_permitivity",
-            dimensionSet(1, 1, -2, 0, 0),
-            transportPropertiesGas
-        )
-    );
+    mthd.reset(new mthdModel(mesh, "transportProperties"));
 }
 
-//electromagnetic fields (end)
-//MAGNETIC STUFF (includes switch) (end)
-
-
-
-
-// Electrical resistivity of condensate only
-
-// Reference at point of use
-const dimensionedScalar& eleccond1 = eleccond1Ptr();
+const dimensionedScalar eleccond1 =
+    mthdModel::readElectricalConductivity(transportPropertiesMetal);
 
 volScalarField electrical_resistivity
 (

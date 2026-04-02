@@ -67,8 +67,7 @@ Authors
 
 #include "Polynomial.H"
 #include "laserHeatSource.H"
-
-#include "helperFunctions.H"
+#include "mthdModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -91,15 +90,6 @@ int main(int argc, char *argv[])
     #include "initContinuityErrs.H"
     #include "createDyMControls.H"
 
-
-    //     const dictionary& Bpiso = mesh.solutionDict().subDict("BPISO");
-
-    // const int nBcorr = Bpiso.getOrDefault<int>("nCorrectors", 1);
-
-
-
-
-    pimpleControl bpiso(mesh, "BPISO"); //Roman, can you check this - I moved from piso to pimplecontrol
 
     #include "createFields.H"
     #include "MULES/createAlphaFluxes.H"
@@ -185,9 +175,9 @@ int main(int argc, char *argv[])
             }
 
             #include "UEqn.H"
-
-            if(electromagnetics){
-            #include "HEqn.H"//electromag solve
+            if (mthd.valid())
+            {
+                mthd->solve(phi, U);
             }
             #include "TEqn.H"
 
