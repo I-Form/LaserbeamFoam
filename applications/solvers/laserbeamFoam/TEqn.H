@@ -74,7 +74,6 @@
           ==
             laser.deposition()
           + Joulesource
-          - Qv*mag(gradAlpha)*thermalDamper
           + (Qrad_expl - Qv)*gradAlphaDamper
           - TRHS
         );

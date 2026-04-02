@@ -804,6 +804,7 @@ volScalarField electrical_resistivity
 // Create laser heat source
 laserHeatSource laser(mesh);
 
+#include "updateYDim.H"
 #include "updateProps.H"
 
 // volScalarField depositionTemp
