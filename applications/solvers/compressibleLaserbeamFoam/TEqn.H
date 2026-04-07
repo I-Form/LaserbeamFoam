@@ -42,7 +42,7 @@ TRHS.correctBoundaryConditions();
     const volScalarField& Joulesource =
         mthd.valid()
       ? mthd->Joulesource()
-      : volScalarField::null();
+      : TRHS;
 
     fvScalarMatrix TEqn
     (

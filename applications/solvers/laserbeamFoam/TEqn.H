@@ -59,10 +59,10 @@
         }
 
         const volScalarField gradAlphaDamper (mag(gradAlpha)*thermalDamper);
-        const volScalarField& Joulesource =
-            mthd.valid()
-          ? mthd->Joulesource()
-          : volScalarField::null();
+    const volScalarField& Joulesource =
+        mthd.valid()
+      ? mthd->Joulesource()
+      : TRHS;
 
         fvScalarMatrix TEqn
         (
