@@ -1,9 +1,9 @@
 /*--------------------------------*- C++ -*----------------------------------*\
-  =========                  
+  =========
   \\      /  F ield           OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration       Website:  www.openfoam.com
     \\  /    A nd             Version:  v2506
-     \\/     M anipulation   
+     \\/     M anipulation
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
@@ -27,7 +27,7 @@ thermoType
     [3] https://www.matweb.com/search/DataSheet.aspx?MatGUID=c9a1da836836434d8caa78c23dfeb10f&ckck=1
     For thermal conductivity interpolated as 0.01755586
 */
-#include "properties_reference"
+#include "propertiesReference"
 
 // ARGON
 

@@ -13,7 +13,7 @@ FoamFile
     object      H;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-#include "initial_values"
+#include "initialValues"
 dimensions      [0 -1 0 0 0 0 0];
 
 internalField uniform $H_fe ; //(0 0 0);

@@ -1,9 +1,9 @@
 /*--------------------------------*- C++ -*----------------------------------*\
-  =========                  
+  =========
   \\      /  F ield           OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration       Website:  www.openfoam.com
     \\  /    A nd             Version:  v2506
-     \\/     M anipulation   
+     \\/     M anipulation
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
@@ -14,7 +14,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 // #include "../system/flow_region_geom"
-#include "initial_values"
+#include "initialValues"
 
 dimensions      [0 1 -1 0 0 0 0];
 
@@ -23,7 +23,7 @@ internalField   uniform (0 0 0);
 boundaryField
 {
     #includeEtc "caseDicts/setConstraintTypes"
-    
+
     inlet
     {
         type            zeroGradient;

@@ -1,9 +1,9 @@
 /*--------------------------------*- C++ -*----------------------------------*\
-  =========                  
-  \\      /  F ield           OpenFOAM: The Open Source CFD Toolbox
-   \\    /   O peration       Website:  www.openfoam.com
-    \\  /    A nd             Version:  v2506
-     \\/     M anipulation   
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  www.openfoam.com
+    \\  /    A nd           | Version:  v2506
+     \\/     M anipulation  |
 
 Description:
     This is a dictionary made as a work-around to pyFoam ParsedParameter
@@ -17,25 +17,31 @@ FoamFile
     format      ascii;
     class       dictionary;
     location    "initial";
-    object      initial_values;
+    object      initialValues;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 // User's Initial Value Defintions:
-p_internal  1e5;
-T_internal  293;
+p_internal 1e5;
+T_internal 293;
 U_initial_vector_values (0 0 0);
-B_target    1;
+B_target -99e-3;
 
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - //
 // Automated calculations for initial H vector values.
-#include "../constant/properties_reference"
+#include "../constant/propertiesReference"
 
 // Compute H for constant B initial conditions
 // > `B = mu * H`, or $\vec{B} = \mu \, \vec{H}$.
-H_air_target  #eval "$B_target / $magnetic_permeability_air_";
+H_argon_target  #eval "$B_target / $magnetic_permeability_argon_";
+H_ga_target     #eval "$B_target / $magnetic_permeability_ga_";
 
 // Note: `z` axis on 2D will result in solution singularity.
-H_air (0 $H_air_target 0);
+H_argon ($H_argon_target 0 0);
+H_ga    ($H_ga_target    0 0);
+
+// hot fix
+H_air $H_argon;
+H_fe  $H_ga;
 
 // ************************************************************************* //

@@ -13,7 +13,7 @@ FoamFile
     object      phaseProperties;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-#include "../initial/initial_values"
+#include "../initial/initialValues"
 
 phases (air GaInSn);
 

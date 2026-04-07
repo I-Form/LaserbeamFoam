@@ -14,8 +14,8 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 #include "flow_region_geom"
-// #include "../initial/initial_values"
-#include "../initial/initial_values"
+// #include "../initial/initialValues"
+#include "../initial/initialValues"
 
 defaultFieldValues
 (

@@ -13,10 +13,10 @@ FoamFile
     object      transportProperties;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-#include "properties_reference"
+#include "propertiesReference"
 /*
     To modify magnetic permittivity or electrical conductivity, please edit the
-    `properties_reference` file within `constant`.
+    `propertiesReference` file within `constant`.
 */
 
 

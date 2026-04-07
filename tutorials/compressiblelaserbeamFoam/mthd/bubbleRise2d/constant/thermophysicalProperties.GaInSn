@@ -32,7 +32,7 @@ thermoType
     Setup notes:
     - `perfectFluid` is used to create artificial compressibility, and is used for compatability with argon
 */
-#include "properties_reference"
+#include "propertiesReference"
 
 
 // TREAT AS Ga-....

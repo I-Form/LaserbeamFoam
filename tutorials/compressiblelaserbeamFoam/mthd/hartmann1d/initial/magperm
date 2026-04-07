@@ -1,9 +1,9 @@
 /*--------------------------------*- C++ -*----------------------------------*\
-  =========                  
+  =========
   \\      /  F ield           OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration       Website:  www.openfoam.com
     \\  /    A nd             Version:  v2506
-     \\/     M anipulation   
+     \\/     M anipulation
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
@@ -13,7 +13,7 @@ FoamFile
     object      magperm;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-#include "../constant/properties_reference"
+#include "../constant/propertiesReference"
 dimensions      [1 1 -2 0 0 0 0];
 
 internalField   uniform 0.0;

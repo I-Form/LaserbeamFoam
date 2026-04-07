@@ -32,8 +32,8 @@ For more details on the Hartmann problem, please see
 _Ch. IV: II.2 Hartmann flow_ in [1].
 
 ## Usage (Changing Parameters)
-- The set magnetic field value $B$ may be changed in `./initial/initial_values`.
-- The electrical conductivity may be changed in `./constant/properties_reference`.
+- The set magnetic field value $B$ may be changed in `./initial/initialValues`.
+- The electrical conductivity may be changed in `./constant/propertiesReference`.
 - Due to the usage of a steady state solver, under relaxation factors are
   recommended.
 

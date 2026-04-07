@@ -1,9 +1,9 @@
 /*--------------------------------*- V++ -*----------------------------------*\
-  =========                  
+  =========
   \\      /  F ield           OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration       Website:  www.openfoam.com
     \\  /    A nd             Version:  v2506
-     \\/     M anipulation   
+     \\/     M anipulation
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
@@ -13,11 +13,11 @@ FoamFile
     object      phaseProperties;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-#include "../initial/initial_values"
+#include "../initial/initialValues"
 
 phases (air);
 
-// For Compressible code * * * * * * * * * * * * * * * * * * * * * * * * * * 
+// For Compressible code * * * * * * * * * * * * * * * * * * * * * * * * * *
 
 pMin                    -10000.0;
 P0                      $p_internal;

@@ -13,7 +13,7 @@ FoamFile
     object      magperm;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-#include "../constant/properties_reference"
+#include "../constant/propertiesReference"
 dimensions      [1 1 -2 0 0 0 0];
 
 internalField   uniform 0.0;

@@ -14,7 +14,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 // #include "../system/flow_region_geom"
-#include "initial_values"
+#include "initialValues"
 
 dimensions      [0 1 -1 0 0 0 0];
 
@@ -38,7 +38,7 @@ boundaryField
         // #{
         //     //const vectorField& positions = this->mesh.C().boundaryField()[patchID];
         //     const fvPatch& boundaryPatch = this->patch();
-        //     const vectorField& Cf = boundaryPatch.Cf(); 
+        //     const vectorField& Cf = boundaryPatch.Cf();
         //     const scalar L0 = 0.2; //$L0value ; (referencing is not working here?)
         //     const scalar L1 = 0.4; // $L1value ;
         //     // const scalar pi_ = Foam::constant::mathematical::pi;
