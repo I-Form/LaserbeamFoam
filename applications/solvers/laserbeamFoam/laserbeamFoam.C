@@ -47,8 +47,6 @@ Authors
 \*---------------------------------------------------------------------------*/
 
 #include "fvCFD.H"
-// #include "pisoControl.H"
-
 #include "dynamicFvMesh.H"
 #include "isoAdvection.H"
 #include "CMULES.H"
@@ -89,8 +87,6 @@ int main(int argc, char *argv[])
     #include "createDynamicFvMesh.H"
     #include "initContinuityErrs.H"
     #include "createDyMControls.H"
-
-
     #include "createFields.H"
     #include "MULES/createAlphaFluxes.H"
     #include "initCorrectPhi.H"

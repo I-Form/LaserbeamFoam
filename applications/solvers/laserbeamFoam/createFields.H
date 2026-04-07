@@ -117,11 +117,6 @@ if
         << exit(FatalError);
 }
 
-
-
-
-
-
 dictionary& transportPropertiesMetal = transportProperties.subDict("metal");
 dictionary& transportPropertiesGas = transportProperties.subDict("gas");
 
@@ -229,14 +224,14 @@ volScalarField em
 (
     IOobject
     (
-        "em",                       
-        runTime.timeName(),         
-        mesh,                       
-        IOobject::NO_READ,          
-        IOobject::NO_WRITE          
+        "em",
+        runTime.timeName(),
+        mesh,
+        IOobject::NO_READ,
+        IOobject::NO_WRITE
     ),
     mesh,
-    dimensionedScalar("zero", dimless, 0.0) 
+    dimensionedScalar("zero", dimless, 0.0)
 );
 
 const dimensionedScalar SB
@@ -624,11 +619,6 @@ volScalarField alpha_smoothed
     dimensionedScalar("alpha_smoothed", dimensionSet(0, 0, 0, -0, 0), 0.0)
 );
 
-// volVectorField gradepsilon1(fvc::grad(epsilon1));
-// volScalarField e1temp(fvc::average(epsilon1));
-// volScalarField e2temp(fvc::average(epsilon1mask));
-
-
 volScalarField e1temp
 (
     IOobject
@@ -643,17 +633,6 @@ volScalarField e1temp
     dimensionedScalar("e1temp", dimensionSet(0, 0, 0, -0, 0), 0.0)
 );
 e1temp = fvc::average(epsilon1);
-
-
-// dimensionedScalar elec_resistivity_metal
-// (
-//     "elec_resistivity",
-//     dimensionSet(1, 3, -3, 0, 0),
-//     transportPropertiesMetal//.lookup("elec_resistivity")
-// );
-
-
-
 
 volScalarField rhoCp
 (
