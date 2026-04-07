@@ -507,6 +507,34 @@ volVectorField Marangoni
     dimensionedVector("Marangoni", dimensionSet(1, -2, -2, 0, 0), vector::zero)
 );
 
+const volVectorField zeroJcrossB
+(
+    IOobject
+    (
+        "zeroJcrossB",
+        runTime.timeName(),
+        mesh,
+        IOobject::NO_READ,
+        IOobject::NO_WRITE
+    ),
+    mesh,
+    dimensionedVector("zeroJcrossB", dimensionSet(1, -2, -2, 0, 0), vector::zero)
+);
+
+const volScalarField zeroJoulesource
+(
+    IOobject
+    (
+        "zeroJoulesource",
+        runTime.timeName(),
+        mesh,
+        IOobject::NO_READ,
+        IOobject::NO_WRITE
+    ),
+    mesh,
+    dimensionedScalar("zeroJoulesource", dimensionSet(1, -1, -3, 0, 0), 0.0)
+);
+
 // Recoil Pressure
 volScalarField pVap
 (

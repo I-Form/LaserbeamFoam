@@ -24,7 +24,7 @@ if (mthd.valid())
 const volVectorField& JcrossB =
     mthd.valid()
   ? mthd->JcrossB()
-  : Marangoni;
+  : zeroJcrossB;
 
 fvVectorMatrix UEqn
 (
