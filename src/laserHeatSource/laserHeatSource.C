@@ -736,7 +736,7 @@ void laserHeatSource::updateDeposition
         );
         const word maxRayBounceAction
         (
-            dict.lookupOrDefault<word>("maxRayBounceAction", "error")
+            dict.lookupOrDefault<word>("maxRayBounceAction", "deposit")
         );
         const scalar nearZeroAbsorptivityTol
         (
