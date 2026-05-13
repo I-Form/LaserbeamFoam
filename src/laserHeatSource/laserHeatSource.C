@@ -728,11 +728,11 @@ void laserHeatSource::updateDeposition
         );
         const scalar rayPowerRelTol
         (
-            dict.lookupOrDefault<scalar>("rayPowerRelTol", 1e-6)
+            dict.lookupOrDefault<scalar>("rayPowerRelTol", 1e-4)
         );
         const label maxRayBounces
         (
-            dict.lookupOrDefault<label>("maxRayBounces", 10000)
+            dict.lookupOrDefault<label>("maxRayBounces", 1000)
         );
         const word maxRayBounceAction
         (
