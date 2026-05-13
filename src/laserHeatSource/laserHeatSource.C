@@ -730,6 +730,18 @@ void laserHeatSource::updateDeposition
         (
             dict.lookupOrDefault<scalar>("rayPowerRelTol", 1e-6)
         );
+        const label maxRayBounces
+        (
+            dict.lookupOrDefault<label>("maxRayBounces", 10000)
+        );
+        const word maxRayBounceAction
+        (
+            dict.lookupOrDefault<word>("maxRayBounceAction", "error")
+        );
+        const scalar nearZeroAbsorptivityTol
+        (
+            dict.lookupOrDefault<scalar>("nearZeroAbsorptivityTol", SMALL)
+        );
 
         updateDeposition
         (
@@ -751,6 +763,9 @@ void laserHeatSource::updateDeposition
             useLocalSearch,
             maxLocalSearch,
             rayPowerRelTol,
+            maxRayBounces,
+            maxRayBounceAction,
+            nearZeroAbsorptivityTol,
             globalBB_
         );
     }
@@ -793,6 +808,9 @@ void laserHeatSource::updateDeposition
     const Switch useLocalSearch,
     const label maxLocalSearch,
     const scalar rayPowerRelTol,
+    const label maxRayBounces,
+    const word& maxRayBounceAction,
+    const scalar nearZeroAbsorptivityTol,
     const boundBox& globalBB
 )
 {
@@ -871,6 +889,11 @@ void laserHeatSource::updateDeposition
 
     DynamicList<label> finishedRayIDs;
     DynamicList<DynamicList<point>> finishedRayPaths;
+    label maxBounceTerminations = 0;
+    scalar maxBounceResidualPower = 0.0;
+    scalar minAbsorptivity = GREAT;
+    label nearZeroAbsorptivityCount = 0;
+    label maxObservedBounces = 0;
 
     laserRayParticle::trackingData td
     (
@@ -885,6 +908,14 @@ void laserHeatSource::updateDeposition
         plasma_frequency,
         angular_frequency,
         rayPowerAbsTol,
+        maxRayBounces,
+        maxRayBounceAction,
+        nearZeroAbsorptivityTol,
+        maxBounceTerminations,
+        maxBounceResidualPower,
+        minAbsorptivity,
+        nearZeroAbsorptivityCount,
+        maxObservedBounces,
         finishedRayIDs,
         finishedRayPaths
     );
@@ -895,6 +926,12 @@ void laserHeatSource::updateDeposition
     // the rays are tracked to completion in a single call.
     rayCloud.storeGlobalPositions();
     rayCloud.move(rayCloud, td, GREAT);
+
+    reduce(maxBounceTerminations, sumOp<label>());
+    reduce(maxBounceResidualPower, sumOp<scalar>());
+    reduce(minAbsorptivity, minOp<scalar>());
+    reduce(nearZeroAbsorptivityCount, sumOp<label>());
+    reduce(maxObservedBounces, maxOp<label>());
 
     // ==================================================================
     // Step 4: Gather ray path segments to master for VTK output
@@ -970,6 +1007,27 @@ void laserHeatSource::updateDeposition
 
     const scalar TotalQ = fvc::domainIntegrate(deposition_).value();
     Info<< "    Total Q deposited: " << TotalQ << endl;
+
+    if (maxBounceTerminations > 0)
+    {
+        Info<< "    Ray-tracing safety diagnostics:" << nl
+            << "        maxRayBounces = " << maxRayBounces << nl
+            << "        maxRayBounceAction = " << maxRayBounceAction << nl
+            << "        max observed bounces = " << maxObservedBounces << nl
+            << "        rays handled by maxRayBounces = "
+            << maxBounceTerminations << nl
+            << "        residual power handled by maxRayBounces = "
+            << maxBounceResidualPower << nl
+            << "        residual fraction of current laser power = "
+            << maxBounceResidualPower/(mag(currentLaserPower) + VSMALL) << nl
+            << "        minimum Fresnel absorptivity encountered = "
+            << (minAbsorptivity == GREAT ? scalar(-1) : minAbsorptivity)
+            << nl
+            << "        near-zero absorptivity interactions = "
+            << nearZeroAbsorptivityCount << nl
+            << "        near-zero absorptivity tolerance = "
+            << nearZeroAbsorptivityTol << endl;
+    }
 }
 
 
