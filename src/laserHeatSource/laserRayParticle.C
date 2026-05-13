@@ -159,8 +159,8 @@ bool Foam::laserRayParticle::move
         td.rayQ_[cellI] += power_;
         td.rayNumber_[cellI] = globalRayIndex_;
 
-        // Check if power is exhausted
-        if (power_ < td.rayPowerAbsTol_ || power_ < SMALL)
+        // Check if power is exhausted relative to this ray's initial power
+        if (power_ < td.rayPowerRelTol_*initialPower_ || power_ < SMALL)
         {
             path_.append(position());
             td.finishedRayIDs_.append(globalRayIndex_);
@@ -291,7 +291,7 @@ bool Foam::laserRayParticle::move
             }
 
             // If power is now below tolerance, kill the ray
-            if (power_ < td.rayPowerAbsTol_)
+            if (power_ < td.rayPowerRelTol_*initialPower_)
             {
                 td.finishedRayIDs_.append(globalRayIndex_);
                 td.finishedRayPaths_.append(path_);

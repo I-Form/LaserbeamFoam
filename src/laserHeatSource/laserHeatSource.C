@@ -870,11 +870,6 @@ void laserHeatSource::updateDeposition
         nTotalRays
     );
 
-    // Compute absolute power tolerance from relative tolerance
-    // (Based on average ray power, not total power)
-    const scalar rayPowerAbsTol =
-        rayPowerRelTol*currentLaserPower/max(nTotalRays, 1);
-
     // ==================================================================
     // Step 3: Move the particles through the mesh
     //
@@ -907,7 +902,7 @@ void laserHeatSource::updateDeposition
         dep_cutoff,
         plasma_frequency,
         angular_frequency,
-        rayPowerAbsTol,
+        rayPowerRelTol,
         maxRayBounces,
         maxRayBounceAction,
         nearZeroAbsorptivityTol,

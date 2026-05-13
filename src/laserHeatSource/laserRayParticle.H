@@ -143,8 +143,8 @@ public:
             //- Angular frequency of laser light [rad/s]
             scalar angularFrequency_;
 
-            //- Ray power absolute tolerance [W]
-            scalar rayPowerAbsTol_;
+            //- Ray power tolerance relative to each ray's initial power
+            scalar rayPowerRelTol_;
 
             //- Maximum number of reflections before handling a ray
             label maxRayBounces_;
@@ -190,7 +190,7 @@ public:
             const scalar depCutoff,
             const scalar plasmaFrequency,
             const scalar angularFrequency,
-            const scalar rayPowerAbsTol,
+            const scalar rayPowerRelTol,
             const label maxRayBounces,
             const word& maxRayBounceAction,
             const scalar nearZeroAbsorptivityTol,
@@ -213,7 +213,7 @@ public:
             depCutoff_(depCutoff),
             plasmaFrequency_(plasmaFrequency),
             angularFrequency_(angularFrequency),
-            rayPowerAbsTol_(rayPowerAbsTol),
+            rayPowerRelTol_(rayPowerRelTol),
             maxRayBounces_(maxRayBounces),
             maxRayBounceAction_(maxRayBounceAction),
             nearZeroAbsorptivityTol_(nearZeroAbsorptivityTol),
